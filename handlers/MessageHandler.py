@@ -8,7 +8,6 @@ from aiogram.fsm.context import FSMContext
 from aiogram.types import InlineKeyboardMarkup, InputMediaPhoto, BotCommand
 from aiogram.utils.formatting import Text, Code, Bold
 from aiogram.utils.media_group import MediaGroupBuilder
-from aiogram.webhook.aiohttp_server import setup_application, SimpleRequestHandler
 from aiohttp import web
 
 import Config
@@ -68,11 +67,11 @@ async def change_language(message: aiogram.types.Message) -> None:
     await select_language(message)
 
 
-async def welcome_customer(message, lang):
+async def welcome_customer(user_id, message, lang):
     content = Text(
         Text(_("Уважаемый пользователь, вы зарегистрировались в боте Ismo Group.\n", lang)),
         Bold(_("Ваш идентификационный номер: ", lang)),
-        Code(message.from_user.id),
+        Code(user_id),
         Text(
             _("\nС помощью этого бота вы можете искать и скачивать фотографии со своей свадьбы, дня рождения или мероприятия.",
               lang))
@@ -97,7 +96,7 @@ async def command_start_handler(message: aiogram.types.Message, state: FSMContex
 
     user_type = user['user_type']
     if user_type == user_type_service.getCustomerType():
-        await welcome_customer(message, lang)
+        await welcome_customer(message.from_user.id, message, lang)
         await state.set_state(OrderState.category_type)
     else:
         await AdminRouters.command_start_handler(message, lang)
@@ -116,7 +115,7 @@ async def choose_language(query: aiogram.types.CallbackQuery) -> None:
     lang = query.data.split('_')[-1]
     users_service.setLanguage(query.from_user.id, lang)
     await query.message.delete()
-    await welcome_customer(query.message, lang)
+    await welcome_customer(query.from_user.id, query.message, lang)
 
 
 @dp.callback_query(
