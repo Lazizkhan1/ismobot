@@ -20,14 +20,12 @@ class LoggingMiddleware(BaseMiddleware):
 
 
         # Identify interaction type
+        logger.debug(event.model_dump_json(indent=4))
         if isinstance(event, Message):
-            logger.debug(event.model_dump_json())
             logger.warning(f"Message from @{username} | {user_full_name} ({user_id}): {event.text}")
         elif isinstance(event, CallbackQuery):
-            logger.debug(event.model_dump_json())
             logger.warning(f"Callback from @{username} | {user_full_name} ({user_id}): {event.data}")
         else:
-            logger.debug(event.model_dump_json())
             logger.warning(f"Interaction from @{username} | {user_full_name} ({user_id}): {type(event).__name__}")
             
         # Continue execution to the actual handler
