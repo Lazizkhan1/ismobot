@@ -1,217 +1,163 @@
 translation = {
-    "Все модераторы": {
-        "uz": "Barcha moderatorlar",
-        "en": "All moderators"
-    },
-    "Добавить модератора": {
-        "uz": "Moderator qo'shish",
-        "en": "Add moderator"
-    },
-    "Удалить модератора": {
-        "uz": "Moderatorni o'chirish",
-        "en": "Remove moderator"
-    },
     "Главное меню": {
-        "uz": "Asosiy menyu",
-        "en": "Main menu"
+        "uz": "Asosiy menyu"
     },
     "Все категории": {
-        "uz": "Barcha kategoriyalar",
-        "en": "All categories"
+        "uz": "Barcha kategoriyalar"
     },
     "Добавить категорию": {
-        "uz": "Kategoriya qo'shish",
-        "en": "Add category"
+        "uz": "Kategoriya qo'shish"
     },
     "Удалить категорию": {
-        "uz": "Kategoriyani o'chirish",
-        "en": "Delete category"
-    },
-    "Модераторы": {
-        "uz": "Moderatorlar",
-        "en": "Moderators"
-    },
-    "Типы категорий": {
-        "uz": "Kategoriya turlari",
-        "en": "Category types"
+        "uz": "Kategoriyani o'chirish"
     },
     "Категории": {
-        "uz": "Kategoriyalar",
-        "en": "Categories"
+        "uz": "Kategoriyalar"
     },
     "Заказы": {
-        "uz": "Buyurtmalar",
-        "en": "Orders"
+        "uz": "Buyurtmalar"
     },
     "Отмена": {
-        "uz": "Bekor qilish",
-        "en": "Cancel"
+        "uz": "Bekor qilish"
     },
     "Назад": {
-        "uz": "Orqaga",
-        "en": "Back"
-    },
-    "Один человек": {
-        "uz": "Bir kishi",
-        "en": "One person"
-    },
-    "Несколько человек": {
-        "uz": "Ko'pchilik",
-        "en": "Multiple people"
+        "uz": "Orqaga"
     },
     "Подписаться": {
-        "uz": "Obuna bo'lish",
-        "en": "Subscribe"
+        "uz": "Obuna bo'lish"
     },
     "Принять": {
-        "uz": "Qabul qilish",
-        "en": "Accept"
+        "uz": "Qabul qilish"
     },
     "Отклонить": {
-        "uz": "Rad etish",
-        "en": "Decline"
-    },
-    "Все типы категорий": {
-        "uz": "Barcha kategoriya turlari",
-        "en": "All category types"
-    },
-    "Добавить тип категории": {
-        "uz": "Kategoriya turini qo'shish",
-        "en": "Add category type"
-    },
-    "Удалить тип категории": {
-        "uz": "Kategoriya turini o'chirish",
-        "en": "Delete category type"
+        "uz": "Rad etish"
     },
     "Язык успешно изменен!✅": {
-        "uz": "Til muvaffaqiyatli o'zgartirildi!✅",
-        "en": "Language successfully changed!✅"
+        "uz": "Til muvaffaqiyatli o'zgartirildi!✅"
     },
     "Уважаемый пользователь, вы зарегистрировались в боте Ismo Group.\n": {
-        "uz": "Hurmatli foydalanuvchi, siz Ismo Group botiga ro'yxatdan o'tdingiz.\n",
-        "en": "Dear user, you have registered with the Ismo Group bot.\n"
+        "uz": "Hurmatli foydalanuvchi, siz Ismo Group botiga ro'yxatdan o'tdingiz.\n"
     },
     "Ваш идентификационный номер: ": {
-        "uz": "Sizning identifikatsion raqamingiz: ",
-        "en": "Your identification number: "
+        "uz": "Sizning identifikatsion raqamingiz: "
     },
     "\nС помощью этого бота вы можете искать и скачивать фотографии со своей свадьбы, дня рождения или мероприятия.": {
-        "uz": "\nUshbu bot yordamida siz to'y, tug'ilgan kun yoki tadbir rasmlarini qidirib topishingiz va yuklab olishingiz mumkin.",
-        "en": "\nWith this bot, you can search for and download photos from your wedding, birthday, or event."
+        "uz": "\nUshbu bot yordamida siz to'y, tug'ilgan kun yoki tadbir rasmlarini qidirib topishingiz va yuklab olishingiz mumkin."
     },
-    "Чтобы начать заказ, вы можете начать с выбора типа здания ниже. ": {
-        "uz": "Buyurtmani boshlash uchun quyidagi binolar turini tanlash bilan boshlashingiz mumkin. ",
-        "en": "To start the order, you can begin by selecting the type of building below. "
-    },
-    "Вы модератор!\n": {
-        "uz": "Siz moderator!\n",
-        "en": "You are a moderator!\n"
+    "Чтобы начать заказ, вы можете начать с выбора категории ниже.": {
+        "uz": "Buyurtmani boshlash uchun quyidagi kategoriyalardan birini tanlang."
     },
     "Вы администратор!\n": {
-        "uz": "Siz administrator!\n",
-        "en": "You are an administrator!\n"
+        "uz": "Siz administratorsiz!\n"
     },
     "Выберите категорию!": {
-        "uz": "Kategoriya tanlang!",
-        "en": "Select a category!"
+        "uz": "Kategoriya tanlang!"
     },
-    "Введите дату церемонии!\nНапример: (24.10.2024)": {
-        "uz": "Tadbir sanasini kiriting!\nMasalan: (24.10.2024)",
-        "en": "Enter the ceremony date!\nFor example: (10/24/2024)"
+    "Выберите скорость доставки заказа:": {
+        "uz": "Buyurtma yetkazish tezligini tanlang:"
+    },
+    "Категория выбрана!": {
+        "uz": "Kategoriya tanlandi!"
+    },
+    "Быстрая (2 часа)": {
+        "uz": "Tezkor (2 soat)"
+    },
+    "Обычная (24 часа)": {
+        "uz": "Oddiy (24 soat)"
+    },
+    "Тезkor (2 soat)": {
+        "uz": "Tezkor (2 soat)"
+    },
+    "Oddiy (24 soat)": {
+        "uz": "Oddiy (24 soat)"
+    },
+    "Введите дату церемонии! \nНапример: (24.10.2024)": {
+        "uz": "Tadbir sanasini kiriting! \nMasalan: (24.10.2024)"
     },
     "Неверный формат даты!": {
-        "uz": "Noto'g'ri sana formati!",
-        "en": "Invalid date format!"
+        "uz": "Noto'g'ri sana formati!"
     },
-    "Введите количество человек!": {
-        "uz": "Odamlar sonini kiriting!",
-        "en": "Enter the number of people!"
-    },
-    "Отправьте свою фотографию, на которой должно быть видно ваше лицо.": {
-        "uz": "Yuzingiz ko'rinadigan rasmingizni yuboring.",
-        "en": "Send your photo where your face is clearly visible."
-    },
-    "Отправьте свою фотографию, как многие!": {
-        "uz": "Ko'pchilik bo'lib tushgan suratingizni yuboring!",
-        "en": "Send the photo you fell in the crowd!"
+    "Пожалуйста, отправьте видеокружок (круглое видео) с вашим лицом не менее 3 секунд! \nНам нужно это видео, чтобы мы могли узнать вас по фотографии!": {
+        "uz": "Iltimos, 3 soniyadan kam bio'lmagan, yuzingiz ko'ringan videoxabarni (dumaloq video) yuboring! \nUshbu video sizni rasmdan tanib olishimiz uchun kerak bo'ladi!"
     },
     "Стоимость заказа: ": {
-        "uz": "Buyurtma narxi: ",
-        "en": "Order cost: "
-    },
-    " сум\n": {
-        "uz": " so'm\n",
-        "en": " sum\n"
+        "uz": "Buyurtma narxi: "
     },
     "Оплатите на карту: ": {
-        "uz": "Kartaga to'lov qiling: ",
-        "en": "Pay to the card: "
+        "uz": "Karta raqamiga to'lov qiling: "
     },
     "Отправьте чек оплаты!": {
-        "uz": "To'lov chekini yuboring!",
-        "en": "Send the payment receipt!"
+        "uz": "To'lov chekini yuboring!"
     },
     "Отправьте фото!": {
-        "uz": "Rasmingizni yuboring!",
-        "en": "Send the photo!"
+        "uz": "Rasm yuboring!"
+    },
+    " сум\n": {
+        "uz": " so'm\n"
     },
     "Новый заказ!\nID: ": {
-        "uz": "Yangi buyurtma!\nID: ",
-        "en": "New order!\nID: "
+        "uz": "Yangi buyurtma!\nID: "
     },
     "Категория: ": {
-        "uz": "Kategoriya: ",
-        "en": "Category: "
+        "uz": "Kategoriya: "
     },
     "Дата: ": {
-        "uz": "Sana: ",
-        "en": "Date: "
+        "uz": "Sana: "
     },
-    "Один человек: ": {
-        "uz": "Bir kishilik: ",
-        "en": "One person: "
+    "Доставка: ": {
+        "uz": "Yetkazib berish: "
     },
     "Заказ успешно оформлен! Наши администраторы отправят вам ваши фотографии как можно скорее.": {
-        "uz": "Buyurtma muvaffaqiyatli bajarildi! Administratorlarimiz sizga iloji boricha tezroq rasmlaringizni yuboradi.",
-        "en": "Order successfully placed! Our administrators will send you your photos as soon as possible."
+        "uz": "Buyurtma muvaffaqiyatli qabul qilindi! Administratorlarimiz sizga iloji boricha tezroq rasmlaringizni yuboradi."
     },
     "Если хотите, можете подписаться на нашу страницу в Инстаграм!": {
-        "uz": "Istasangiz, Instagram sahifamizga obuna bo'lishingiz mumkin!",
-        "en": "If you wish, you can follow our Instagram page!"
-    },
-    "Фото добавлено!": {
-        "uz": "Rasm qo'shildi!",
-        "en": "Photo added!"
-    },
-    "Произошла ошибка: ": {
-        "uz": "Xato yuz berdi: ",
-        "en": "An error occurred: "
+        "uz": "Istasangiz, Instagram sahifamizga obuna bo'lishingiz mumkin!"
     },
     "Бот запущен успешно!": {
-        "uz": "Bot muvaffaqiyatli ishga tushirildi!",
-        "en": "Bot successfully launched!"
+        "uz": "Bot muvaffaqiyatli ishga tushirildi!"
     },
     "Бот остановил свою работу!": {
-        "uz": "Bot ishini to'xtatdi!",
-        "en": "Bot has stopped working!"
+        "uz": "Bot ishini to'xtatdi!"
     },
-    "На одного человека в едином тарифе Вам будет представлена только 1 сделанная Вами фотография. И большинство тарифов содержат фотографии людей, которых вы отметили, как показано на отправленном вами изображении, или всех людей на изображении, если вы не отметили людей на изображении!": {
-        "uz": "Bir kishilik tarifda faqat 1 ta o'zingiz tushgan rasmlar sizga taqdim etiladi. Ko'pchilik tarifda esa siz jo'natgan rasmda ko'rsatilgandek belgilab jo'natgan insonlarning yoki agar rasmda odamlar belgilanmagan bo'lsa barcha odamlarning rasmlari taqdim etiladi!",
-        "en": "For one person, only 1 photo taken by you will be presented to you in the single rate. And most rates feature pictures of the people you've tagged as shown in the picture you've sent, or of all the people in the picture if you haven't tagged people in the picture!"
+    "Пожалуйста, отправьте фотографии пользователя! \nПосле отправки всех изображений отправьте команду /done": {
+        "uz": "Iltimos, foydalanuvchi rasmlarini yuboring! \nHamma rasmlarni yuborganingizdan keyin /done buyrug'ini yuboring!"
     },
     "Пожалуйста, отправьте фотографии пользователя!": {
-        "uz": "Iltimos, foydalanuvchi rasmlarini yuboring!",
-        "en": "Please send user photos!"
+        "uz": "Iltimos, foydalanuvchi rasmlarini yuboring!"
     },
-    # Enter cancel reason of order:
+    "Доставка выбрана!": {
+        "uz": "Yetkazib berish turi tanlandi!"
+    },
+    "Заказ уже принят или отменен!": {
+        "uz": "Buyurtma allaqachon qabul qilingan yoki bekor qilingan!"
+    },
+    "Заказ принят!": {
+        "uz": "Buyurtma qabul qilindi!"
+    },
+    "Фото добавлено!": {
+        "uz": "Rasm qo'shildi!"
+    },
+    "Заказ успешно завершен и фотографии отправлены!": {
+        "uz": "Buyurtma muvaffaqiyatli yakunlandi va rasmlar yuborildi!"
+    },
+    "Заказ был отменен!": {
+        "uz": "Buyurtma bekor qilindi!"
+    },
+    "Ваш заказ был отменен по причине: ": {
+        "uz": "Buyurtmangiz quyidagi sababga ko'ra bekor qilindi: "
+    },
     "Введите причину отмены заказа:": {
-        "uz": "Buyurtmani bekor qilish sababini kiriting:",
-        "en": "Enter cancel reason of order:"
+        "uz": "Buyurtmani bekor qilish sababini kiriting:"
     },
-    "Введите ID пользователя, которого хотите сделать модератором!": {
-        "uz": "Moderator qilmoqchi bo'lgan foydalanuvchi ID sini kiriting!",
-        "en": "Enter the ID of the user you want to make a moderator!"
+    "От 2 часов⏩": {
+        "uz": "2 soatda⏩"
     },
+    "От 24 часов🕒": {
+        "uz": "24 soatda🕒"
+    },
+    "Если у вас возникнут какие-либо проблемы с ботом, пожалуйста, свяжитесь с @lazizkhan1 !": {
+        "uz": "Agar bot bilan bog'liq muammolar yuzaga kelsa, iltimos, @lazizkhan1 bilan bog'laning!"
+    }
 }
 
 

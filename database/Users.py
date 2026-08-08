@@ -13,7 +13,7 @@ class UsersService:
         self.db.cursor.execute("SELECT * FROM users WHERE user_type = %s", (user_type_id,))
         return self.db.cursor.fetchall()
 
-    def getById(self, user_id: int) -> dict or None:
+    def getById(self, user_id: int) -> dict | None:
         self.db.cursor.execute("SELECT * FROM users WHERE id = %s", (user_id,))
         return self.db.cursor.fetchone()
 
