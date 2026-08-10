@@ -19,7 +19,11 @@ if ! command -v cloudflared >/dev/null 2>&1; then
   exit 1
 fi
 
+STATE_DIR="${XDG_STATE_HOME:-$HOME/.local/state}/ismobot"
+STATE_FILE="$STATE_DIR/base_webhook_url"
 BASE_URL="${1:-}"
+
+mkdir -p "$STATE_DIR"
 
 if [[ -z "$BASE_URL" ]]; then
   LOG_FILE="${TMPDIR:-/tmp}/cloudflared-ismobot.log"
@@ -52,8 +56,10 @@ if [[ -z "$BASE_URL" ]]; then
   fi
 fi
 
+printf '%s\n' "$BASE_URL" > "$STATE_FILE"
+
 export BASE_WEBHOOK_URL="$BASE_URL"
 export WEBHOOK_URL="${BASE_URL}${WEBHOOK_PATH}"
 
 echo "Using webhook URL: ${WEBHOOK_URL}"
-"$PYTHON_BIN" main.py "$BASE_URL"
+wait "$CLOUD_PID"

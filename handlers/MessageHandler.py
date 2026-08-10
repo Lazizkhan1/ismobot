@@ -23,7 +23,9 @@ from middleware.Middleware import Middleware
 bot = Bot(token=TOKEN)
 bot_commands = [
     BotCommand(command="/start", description="Botni boshlash"),
-    BotCommand(command="/lang", description="Tilni o'zgartirish")]
+    BotCommand(command="/lang", description="Tilni o'zgartirish"),
+    BotCommand(command="/admin", description="Admin bilan bog'lanish")
+]
 
 
 router = Router()
@@ -63,7 +65,7 @@ async def welcome_customer(user_id: int, message: Message, lang: str):
 @router.message(Command("admin"))
 async def command_admin_handler(message: Message, state: FSMContext, lang: str) -> None:
     await bot.send_message(
-        chat_id=message.from_user.id, text=_("Если у вас возникнут какие-либо проблемы с ботом, пожалуйста, свяжитесь с @lazizkhan1 !", lang))
+        chat_id=message.from_user.id, text=_("Если у вас возникнут какие-либо проблемы с ботом, пожалуйста, свяжитесь с @ismo_group_admin !", lang))
 
 
 @router.message(CommandStart())
@@ -168,7 +170,7 @@ async def order_delivery_type_select(query: CallbackQuery, state: FSMContext, la
 
     content = Text(
         _("Стоимость заказа: ", lang), Bold(f"{price:,}".replace(",", " ")), Text(_(" сум\n", lang)),
-        _("Оплатите на карту: ", lang), Code(CARD_NUMBER), Text("\n"),
+        _("Оплатите на карту: ", lang), CARD_NUMBER, Text("\n"),
         Bold(_("Отправьте чек оплаты!", lang))
     )
     await query.message.edit_text(**content.as_kwargs())

@@ -149,14 +149,14 @@ translation = {
     "Введите причину отмены заказа:": {
         "uz": "Buyurtmani bekor qilish sababini kiriting:"
     },
-    "От 2 часов⏩": {
-        "uz": "2 soatda⏩"
+    "Быстро (в течение 2 часов)⏩": {
+        "uz": "Tezkor (2 soat ichida)⏩"
     },
     "От 24 часов🕒": {
         "uz": "24 soatda🕒"
     },
-    "Если у вас возникнут какие-либо проблемы с ботом, пожалуйста, свяжитесь с @lazizkhan1 !": {
-        "uz": "Agar bot bilan bog'liq muammolar yuzaga kelsa, iltimos, @lazizkhan1 bilan bog'laning!"
+    "Если у вас возникнут какие-либо проблемы с ботом, пожалуйста, свяжитесь с @ismo_group_admin !": {
+        "uz": "Agar bot bilan bog'liq muammolar yuzaga kelsa, iltimos, @ismo_group_admin bilan bog'laning!"
     }
 }
 

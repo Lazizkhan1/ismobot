@@ -25,7 +25,7 @@ INSTAGRAM_URL = getenv('INSTAGRAM_URL', 'https://instagram.com')
 CARD_NUMBER = getenv('CARD_NUMBER', '')
 DEFAULT_LANGUAGE = getenv('DEFAULT_LANGUAGE', 'uz')
 
-FAST_DELIVERY = int(getenv('FAST_DELIVERY', 50000))
+FAST_DELIVERY = int(getenv('FAST_DELIVERY', 30000))
 SLOW_DELIVERY = int(getenv('SLOW_DELIVERY', 30000))
 
 

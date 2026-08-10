@@ -62,11 +62,11 @@ def instagram_button(lang_=_lang):
 
 
 def delivery_type(lang_=_lang):
-    fast_text = f"{_('Тезkor (2 soat)', lang_)} - {FAST_DELIVERY:,} so'm".replace(",", " ")
-    slow_text = f"{_('Oddiy (24 soat)', lang_)} - {SLOW_DELIVERY:,} so'm".replace(",", " ")
+    fast_text = f"{_('Быстро (в течение 2 часов)⏩', lang_)} - {FAST_DELIVERY:,} so'm".replace(",", " ")
+    slow_text = f"{_('От 24 часов🕒', lang_)} - {SLOW_DELIVERY:,} so'm".replace(",", " ")
     row = [
-        [InlineKeyboardButton(text=f"⚡ {fast_text}", callback_data='delivery_fast')],
-        [InlineKeyboardButton(text=f"🕒 {slow_text}", callback_data='delivery_slow')]
+        [InlineKeyboardButton(text=f"⚡ {fast_text}", callback_data='delivery_fast')]
+        # [InlineKeyboardButton(text=f"🕒 {slow_text}", callback_data='delivery_slow')]
     ]
     return InlineKeyboardMarkup(inline_keyboard=row)
 
