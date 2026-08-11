@@ -86,8 +86,8 @@ translation = {
     "Оплатите на карту: ": {
         "uz": "Karta raqamiga to'lov qiling: "
     },
-    "Отправьте чек оплаты!": {
-        "uz": "To'lov chekini yuboring!"
+    "Пришлите скриншот квитанции об оплате!": {
+        "uz": "To'lov kvitansiyaning ekran rasmini yuboring!"
     },
     "Отправьте фото!": {
         "uz": "Rasm yuboring!"

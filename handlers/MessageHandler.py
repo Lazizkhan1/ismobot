@@ -1,5 +1,6 @@
 from asyncio.log import logger
 import datetime
+import logging
 from aiogram import Bot, F, Router
 from aiogram.enums import ContentType
 from aiogram.filters import CommandStart, Command
@@ -171,7 +172,7 @@ async def order_delivery_type_select(query: CallbackQuery, state: FSMContext, la
     content = Text(
         _("Стоимость заказа: ", lang), Bold(f"{price:,}".replace(",", " ")), Text(_(" сум\n", lang)),
         _("Оплатите на карту: ", lang), CARD_NUMBER, Text("\n"),
-        Bold(_("Отправьте чек оплаты!", lang))
+        Bold(_("Пришлите скриншот квитанции об оплате!", lang))
     )
     await query.message.edit_text(**content.as_kwargs())
     await query.answer(_("Доставка выбрана!", lang))
@@ -181,7 +182,7 @@ async def order_delivery_type_select(query: CallbackQuery, state: FSMContext, la
 @router.message(OrderState.cheque_id)
 async def order_cheque_id(message: Message, state: FSMContext, lang: str) -> None:
     if message.content_type != ContentType.PHOTO:
-        await message.answer(_("Отправьте фото!", lang))
+        await message.answer(_("Пришлите скриншот квитанции об оплате!", lang))
         return
 
     cheque_id = message.photo[-1].file_id
@@ -252,7 +253,8 @@ async def order_photos_upload(message: Message, state: FSMContext, lang: str) ->
     if message.content_type in (ContentType.DOCUMENT, ContentType.PHOTO):
         file_id = message.photo[-1].file_id if message.content_type == ContentType.PHOTO else message.document.file_id
         order_photos_service.add_order_photo(order_id, file_id)
-        await message.answer(_("Фото добавлено!", lang))
+        # await message.answer(_("Фото добавлено!", lang))
+        logging.info(f"Photo added for order {order_id} by user {message.from_user.id}")
         return
 
     if message.text == "/done":
