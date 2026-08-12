@@ -5,6 +5,7 @@ from typing import Callable, Dict, Any, Awaitable
 from aiogram import BaseMiddleware
 from aiogram.types import TelegramObject, Message, CallbackQuery
 
+logger = logging.getLogger(__name__)
 
 class LoggingMiddleware(BaseMiddleware):
     async def __call__(
