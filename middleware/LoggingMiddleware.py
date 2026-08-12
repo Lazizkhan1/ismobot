@@ -1,9 +1,10 @@
 import logging
+from logging.handlers import TimedRotatingFileHandler
+from logging.handlers import TimedRotatingFileHandler
 from typing import Callable, Dict, Any, Awaitable
 from aiogram import BaseMiddleware
 from aiogram.types import TelegramObject, Message, CallbackQuery
 
-logger = logging.getLogger("BOT_LOGGER")
 
 class LoggingMiddleware(BaseMiddleware):
     async def __call__(

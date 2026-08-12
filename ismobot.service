@@ -1,0 +1,18 @@
+[Unit]
+Description=Ismogroup Telegram Bot (production)
+After=network.target
+
+[Service]
+# Running as a dedicated system user is recommended. Edit `User=` before installing.
+WorkingDirectory=/opt/ismobot
+User=ismogroup
+Environment=PYTHONUNBUFFERED=1
+Environment=PATH=/opt/ismobot/venv/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin
+ExecStart=/opt/ismobot/run_bot_prod.sh
+Restart=always
+RestartSec=5
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target

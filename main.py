@@ -3,6 +3,7 @@ import os
 import sys
 from sys import stdout
 from logging import DEBUG, WARNING, basicConfig, INFO
+from logging.handlers import TimedRotatingFileHandler
 
 from aiogram import Bot, Dispatcher
 from aiogram.types import BotCommand
@@ -82,6 +83,8 @@ async def stop_bot():
         await bot_inst.send_message(ADMIN, text=_("Бот остановил свою работу!", 'ru'))
     except Exception:
         pass
+
+
 
 if __name__ == '__main__':
     logging.basicConfig(
