@@ -53,9 +53,7 @@ jobs:
           cat > ~/.ssh/config <<EOF
           Host ${SSH_HOST}
             HostName ${SSH_HOST}
-            User ${SSH_USERNAME}
             ProxyCommand /usr/local/bin/cloudflared access ssh --hostname %h
-            StrictHostKeyChecking accept-new
           EOF
           chmod 600 ~/.ssh/config
 
