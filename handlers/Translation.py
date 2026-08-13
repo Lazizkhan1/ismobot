@@ -53,8 +53,8 @@ translation = {
     "Выберите категорию!": {
         "uz": "Kategoriya tanlang!"
     },
-    "Выберите скорость доставки заказа:": {
-        "uz": "Buyurtma yetkazish tezligini tanlang:"
+    "Мы рады сотрудничеству с вами. \nПроцесс идентификации вашего видео осуществляется через наш бот. Как только фотографии будут обнаружены, они незамедлительно будут вам предоставлены. \n\nСтоимость услуги составляет *30 000 сумов*. В случае если ваши фотографии не будут найдены, произведенная оплата будет возвращена в полном объеме (100%).": {
+        "uz": "Biz bilan hamkorlik qilayotganingizdan mamnunmiz. \nBotimiz orqali videongizni identifikatsiya qilish jarayoni amalga oshirilmoqda. Shaxsingizga oid suratlar aniqlanishi bilan ular sizga zudlik bilan taqdim etiladi. \n\nXizmat narxi *30 000 soʻmni* tashkil etadi. Suratlaringiz topilmagan taqdirda, amalga oshirilgan toʻlov 100% miqdorida toʻliq qaytarib beriladi."
     },
     "Категория выбрана!": {
         "uz": "Kategoriya tanlandi!"
@@ -71,14 +71,14 @@ translation = {
     "Oddiy (24 soat)": {
         "uz": "Oddiy (24 soat)"
     },
-    "Введите дату церемонии! \nНапример: (24.10.2024)": {
-        "uz": "Tadbir sanasini kiriting! \nMasalan: (24.10.2024)"
+    "Введите дату церемонии\\! \nНапример: *(24.10.2024)*": {
+        "uz": "Tadbir sanasini kiriting\\! \nMasalan: *(24.10.2024)*"
     },
     "Неверный формат даты!": {
         "uz": "Noto'g'ri sana formati!"
     },
-    "Пожалуйста, отправьте видеокружок (круглое видео) с вашим лицом не менее 3 секунд! \nНам нужно это видео, чтобы мы могли узнать вас по фотографии!": {
-        "uz": "Iltimos, 3 soniyadan kam bio'lmagan, yuzingiz ko'ringan videoxabarni (dumaloq video) yuboring! \nUshbu video sizni rasmdan tanib olishimiz uchun kerak bo'ladi!"
+    "Пожалуйста, отправьте видеокружок (круглое видео) с вашим лицом не менее *3 секунд*! \nНам нужно это видео, чтобы мы могли узнать вас по фотографии!": {
+        "uz": "Iltimos, *3 soniyadan* kam bio'lmagan, yuzingiz ko'ringan videoxabarni (dumaloq video) yuboring! \nUshbu video sizni rasmdan tanib olishimiz uchun kerak bo'ladi!"
     },
     "Стоимость заказа: ": {
         "uz": "Buyurtma narxi: "
@@ -110,8 +110,8 @@ translation = {
     "Заказ успешно оформлен! Наши администраторы отправят вам ваши фотографии как можно скорее.": {
         "uz": "Buyurtma muvaffaqiyatli qabul qilindi! Administratorlarimiz sizga iloji boricha tezroq rasmlaringizni yuboradi."
     },
-    "Если хотите, можете подписаться на нашу страницу в Инстаграм!": {
-        "uz": "Istasangiz, Instagram sahifamizga obuna bo'lishingiz mumkin!"
+    "Мы искренне рады сотрудничеству с вами. Пожалуйста, оцените качество нашего сервиса.": {
+        "uz": "Biz bilan birga ishlaganingizdan mamnunmiz. Iltimos, xizmatimiz sifatini baholab bersangiz."
     },
     "Бот запущен успешно!": {
         "uz": "Bot muvaffaqiyatli ishga tushirildi!"
@@ -157,6 +157,12 @@ translation = {
     },
     "Если у вас возникнут какие-либо проблемы с ботом, пожалуйста, свяжитесь с @ismo_group_admin !": {
         "uz": "Agar bot bilan bog'liq muammolar yuzaga kelsa, iltimos, @ismo_group_admin bilan bog'laning!"
+    },
+    "сум": {
+        "uz": "so'm"
+    },
+    "Спасибо за вашу оценку!": {
+        "uz": "Baholaganingiz uchun rahmat!"
     }
 }
 

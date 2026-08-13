@@ -33,7 +33,7 @@ class Middleware(BaseMiddleware):
                 user_id = event['callback_query']['from_user']['id']
 
         if user_id:
-            user = users_service.getById(user_id)
+            user = await users_service.getById(user_id)
 
         data['user'] = user
         if user and user.get('lang'):
@@ -54,7 +54,7 @@ class AdminMiddleware(BaseMiddleware):
         user_id = event.from_user.id if hasattr(event, 'from_user') and event.from_user else None
         user = data.get('user')
         if not user and user_id:
-            user = users_service.getById(user_id)
+            user = await users_service.getById(user_id)
 
         is_admin = (user_id == ADMIN) or (user and user.get('user_type') == int(UserTypeEnum.ADMIN))
 

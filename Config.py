@@ -5,8 +5,6 @@ from os import getenv
 load_dotenv()
 
 TOKEN = getenv('TOKEN')
-if not TOKEN:
-    raise ValueError("TOKEN environment variable is required")
 
 ADMIN = int(getenv('ADMIN_ID', '0'))
 WEB_SERVER_HOST = getenv('WEB_SERVER_HOST', '0.0.0.0')
@@ -27,5 +25,4 @@ DEFAULT_LANGUAGE = getenv('DEFAULT_LANGUAGE', 'uz')
 
 FAST_DELIVERY = int(getenv('FAST_DELIVERY', 30000))
 SLOW_DELIVERY = int(getenv('SLOW_DELIVERY', 30000))
-
 

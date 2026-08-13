@@ -1,18 +1,33 @@
-import database.Database
+from sqlalchemy import delete, select
+
+from database.models import OrderPhoto
+from database.session import async_session
+from database.utils import to_dict, to_dicts
 
 
 class OrderPhotosService:
-    def __init__(self):
-        self.db = database.Database.db
+    async def get_order_photos(self, order_id):
+        async with async_session() as session:
+            result = await session.scalars(
+                select(OrderPhoto).where(OrderPhoto.order_id == order_id)
+            )
+            return to_dicts(result.all())
 
-    def get_order_photos(self, order_id):
-        self.db.cursor.execute("SELECT photo_id FROM order_photos WHERE order_id = %s", (order_id,))
-        return self.db.cursor.fetchall()
+    async def add_order_photo(self, order_id, photo_id):
+        async with async_session() as session:
+            photo = OrderPhoto(order_id=order_id, photo_id=photo_id)
+            session.add(photo)
+            await session.commit()
+            await session.refresh(photo)
+            return to_dict(photo)
 
-    def add_order_photo(self, order_id, photo_id):
-        self.db.cursor.execute("INSERT INTO order_photos (order_id, photo_id) VALUES (%s, %s) RETURNING *", (order_id, photo_id))
-        return self.db.cursor.fetchone()
-
-    def delete_order_photo(self, order_id, photo_id):
-        self.db.cursor.execute("DELETE FROM order_photos WHERE order_id = %s AND photo_id = %s RETURNING *", (order_id, photo_id))
-        return self.db.cursor.fetchone()
+    async def delete_order_photo(self, order_id, photo_id):
+        async with async_session() as session:
+            result = await session.scalars(
+                delete(OrderPhoto)
+                .where(OrderPhoto.order_id == order_id, OrderPhoto.photo_id == photo_id)
+                .returning(OrderPhoto)
+            )
+            photo = result.first()
+            await session.commit()
+            return to_dict(photo)

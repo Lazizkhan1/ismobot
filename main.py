@@ -1,21 +1,16 @@
 import logging
 import os
 import sys
-from sys import stdout
-from logging import DEBUG, WARNING, basicConfig, INFO
-from logging.handlers import TimedRotatingFileHandler
 
-from aiogram import Bot, Dispatcher
+from aiogram import Dispatcher
 from aiogram.types import BotCommand
-from Config import ADMIN, TOKEN, WEBHOOK_SECRET, WEBHOOK_PATH, WEB_SERVER_HOST, WEB_SERVER_PORT, BASE_WEBHOOK_URL
-
-from handlers.MessageHandler import router
-from handlers.Translation import _
 from aiohttp import web
 from aiogram.webhook.aiohttp_server import SimpleRequestHandler, setup_application
-from aiogram.fsm.context import FSMContext
-from aiogram.fsm.storage.base import StorageKey
 
+from bot_instance import bot as bot_inst
+from Config import ADMIN, BASE_WEBHOOK_URL, WEBHOOK_PATH, WEBHOOK_SECRET, WEB_SERVER_HOST, WEB_SERVER_PORT
+from handlers.router import router
+from handlers.Translation import _
 from middleware.LoggingMiddleware import LoggingMiddleware
 
 dp = Dispatcher()
@@ -30,7 +25,6 @@ def _resolve_base_webhook_url() -> str:
 
 
 def run_webhook():
-    from handlers.MessageHandler import bot as bot_inst
     webhook_path = WEBHOOK_PATH if WEBHOOK_PATH.startswith("/") else f"/{WEBHOOK_PATH}"
     base_webhook_url = _resolve_base_webhook_url()
     if not base_webhook_url:
@@ -52,9 +46,11 @@ def run_webhook():
 
     async def on_startup(_: web.Application):
         await bot_inst.set_webhook(url=webhook_url, secret_token=WEBHOOK_SECRET)
+        pass
 
     async def on_shutdown(_: web.Application):
-        await bot_inst.delete_webhook(drop_pending_updates=True)
+        pass
+        # await bot_inst.delete_webhook(drop_pending_updates=True)
 
     app.on_startup.append(on_startup)
     app.on_shutdown.append(on_shutdown)
@@ -63,13 +59,18 @@ def run_webhook():
 
 
 async def start_bot():
-    from handlers.MessageHandler import bot as bot_inst
     await bot_inst.set_my_commands([
         BotCommand(command="/start", description="Botni boshlash"),
         BotCommand(command="/lang", description="Tilni o'zgartirish"),
         BotCommand(command="/admin", description="Admin bilan bog'lanish")
         
     ], language_code='uz')
+    await bot_inst.set_my_commands([
+        BotCommand(command="/start", description="Запустить бота"),
+        BotCommand(command="/lang", description="Изменить язык"),
+        BotCommand(command="/admin", description="Связаться с админом")
+    ], language_code='ru')
+
     try:
         await bot_inst.send_message(ADMIN, text=_("Бот запущен успешно!", 'ru'))
     except Exception:
@@ -77,7 +78,6 @@ async def start_bot():
 
 
 async def stop_bot():
-    from handlers.MessageHandler import bot as bot_inst
     try:
         #await dp.storage.close()
         await bot_inst.send_message(ADMIN, text=_("Бот остановил свою работу!", 'ru'))
@@ -88,15 +88,16 @@ async def stop_bot():
 
 if __name__ == '__main__':
     logging.basicConfig(
-    filename='app.log', 
     encoding='utf-8', 
     level=logging.DEBUG,
     format='%(asctime)s - %(levelname)s - %(message)s',
-    filemode='a'  # 'a' to append logs, 'w' to overwrite the file on every run
+    handlers=[
+        logging.FileHandler("app.log"), # Saves to file
+        logging.StreamHandler(sys.stdout) # Prints to console
+    ]
 )
 
     if len(sys.argv) > 1 and sys.argv[1]:
         os.environ['BASE_WEBHOOK_URL'] = sys.argv[1].rstrip('/')
 
     run_webhook()
-
