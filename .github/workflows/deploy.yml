@@ -19,6 +19,7 @@ jobs:
         ssh-private-key:         ${{ secrets.SSH_PRIVATE_KEY }}
         ssh-host:                ${{ secrets.SERVER_SSH_HOST }}
         deploy-user:             ${{ secrets.DEPLOY_USER }}
+        test-connection:         false
       env:
         SERVER_SSH_HOST: ${{ secrets.SERVER_SSH_HOST }}
         DEPLOY_USER:     ${{ secrets.DEPLOY_USER }}
