@@ -21,7 +21,7 @@ jobs:
 
     - run: ssh deploy@${{ secrets.SERVER_SSH_HOST }} "echo connected"
   # ---------------------------------------------------------------------------
-  # 1. Python compile check — gates deployment on clean syntax
+  # 1. Python compile check — gates deployment on clean syntax sheesh
   # ---------------------------------------------------------------------------
   # build:
   #   name: Python Compile Check
