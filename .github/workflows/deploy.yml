@@ -18,8 +18,9 @@ jobs:
         cf-access-client-secret: ${{ secrets.CF_ACCESS_CLIENT_SECRET }}
         ssh-private-key:         ${{ secrets.SSH_PRIVATE_KEY }}
         ssh-host:                ${{ secrets.SERVER_SSH_HOST }}
+        deploy-user:             ${{ secrets.DEPLOY_USER }}
 
-    - run: ssh ismogroup@${{ secrets.SERVER_SSH_HOST }} "echo connected"
+    - run: ssh ${{ secrets.DEPLOY_USER }}@${{ secrets.SERVER_SSH_HOST }} "echo connected"
   # ---------------------------------------------------------------------------
   # 1. Python compile check — gates deployment on clean syntax sheesh eee
   # ---------------------------------------------------------------------------
