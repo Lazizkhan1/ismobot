@@ -29,7 +29,10 @@ async def order_category_select(query: CallbackQuery, state: FSMContext, lang: s
     await state.update_data(category_id=category_id)
 
     await state.set_state(OrderState.ceremony_date)
-    await query.message.edit_text(_("Введите дату церемонии\\! \nНапример: *(24.10.2024)*", lang))
+    await query.message.edit_text(
+        _("Введите дату церемонии! \nНапример: <b>(24.10.2024)</b>", lang),
+        parse_mode=ParseMode.HTML,
+    )
     await query.answer(_("Категория выбрана!", lang))
 
 
@@ -40,8 +43,8 @@ async def order_ceremony_date(message: Message, state: FSMContext, lang: str) ->
         await message.answer(
             _("Неверный формат даты!", lang)
             + "\n"
-            + _("Введите дату церемонии\\! \nНапример: (24.10.2024)", lang),
-            parse_mode=ParseMode.MARKDOWN_V2,
+            + _("Введите дату церемонии! \nНапример: <b>(24.10.2024)</b>", lang),
+            parse_mode=ParseMode.HTML,
         )
         return
 
@@ -51,16 +54,17 @@ async def order_ceremony_date(message: Message, state: FSMContext, lang: str) ->
         await state.set_state(OrderState.video_note_id)
         await message.answer(
             _(
-                "Пожалуйста, отправьте видеокружок (круглое видео) с вашим лицом не менее *3 секунд*! \nНам нужно это видео, чтобы мы могли узнать вас по фотографии!",
+                "Пожалуйста, отправьте видеокружок (круглое видео) с вашим лицом не менее <b>3 секунд</b>! \nНам нужно это видео, чтобы мы могли узнать вас по фотографии!",
                 lang,
-            )
+            ),
+            parse_mode=ParseMode.HTML,
         )
     except Exception:
         await message.answer(
             _("Неверный формат даты!", lang)
             + "\n"
-            + _("Введите дату церемонии\\! \nНапример: (*24.10.2024*)", lang),
-            parse_mode=ParseMode.MARKDOWN_V2,
+            + _("Введите дату церемонии! \nНапример: <b>(24.10.2024)</b>", lang),
+            parse_mode=ParseMode.HTML,
         )
 
 
@@ -69,9 +73,10 @@ async def order_video_note(message: Message, state: FSMContext, lang: str) -> No
     if message.content_type != ContentType.VIDEO_NOTE or message.video_note.duration < 3:
         await message.answer(
             _(
-                "Пожалуйста, отправьте видеокружок (круглое видео) с вашим лицом не менее 3 секунд! \nНам нужно это видео, чтобы мы могли узнать вас по фотографии!",
+                "Пожалуйста, отправьте видеокружок (круглое видео) с вашим лицом не менее <b>3 секунд</b>! \nНам нужно это видео, чтобы мы могли узнать вас по фотографии!",
                 lang,
-            )
+            ),
+            parse_mode=ParseMode.HTML,
         )
         return
 
@@ -81,10 +86,11 @@ async def order_video_note(message: Message, state: FSMContext, lang: str) -> No
     await bot.send_message(
         chat_id=message.from_user.id,
         text=_(
-            "Мы рады сотрудничеству с вами. Процесс идентификации вашего видео осуществляется через наш бот. Как только фотографии будут обнаружены, они незамедлительно будут вам предоставлены. Стоимость услуги составляет 30 000 сумов. В случае если ваши фотографии не будут найдены, произведенная оплата будет возвращена в полном объеме (100%).",
+            "Мы рады сотрудничеству с вами. \nПроцесс идентификации вашего видео осуществляется через наш бот. Как только фотографии будут обнаружены, они незамедлительно будут вам предоставлены. \n\nСтоимость услуги составляет <b>30 000 сумов</b>. В случае если ваши фотографии не будут найдены, произведенная оплата будет возвращена в полном объеме (100%).",
             lang,
         ),
         reply_markup=delivery_type(lang),
+        parse_mode=ParseMode.HTML,
     )
 
 
@@ -158,3 +164,26 @@ async def order_cheque_id(message: Message, state: FSMContext, lang: str) -> Non
     await message.answer(
         _("Заказ успешно оформлен! Наши администраторы отправят вам ваши фотографии как можно скорее.", lang)
     )
+
+
+@router.callback_query(F.data == "flow1_pay")
+async def handle_flow1_pay(query: CallbackQuery, state: FSMContext, lang: str) -> None:
+    from handlers.keyboard import all_categories
+    await query.answer()
+    await query.message.answer(
+        Bold(_("Чтобы начать заказ, вы можете начать с выбора категории ниже.", lang)).as_html(),
+        reply_markup=await all_categories("order_"),
+        parse_mode=ParseMode.HTML,
+    )
+
+
+@router.callback_query(F.data == "flow2_continue")
+async def handle_flow2_continue(query: CallbackQuery, state: FSMContext, lang: str) -> None:
+    from handlers.keyboard import all_categories
+    await query.answer()
+    await query.message.answer(
+        Bold(_("Чтобы начать заказ, вы можете начать с выбора категории ниже.", lang)).as_html(),
+        reply_markup=await all_categories("order_"),
+        parse_mode=ParseMode.HTML,
+    )
+

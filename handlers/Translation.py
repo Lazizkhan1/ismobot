@@ -53,8 +53,8 @@ translation = {
     "Выберите категорию!": {
         "uz": "Kategoriya tanlang!"
     },
-    "Мы рады сотрудничеству с вами. \nПроцесс идентификации вашего видео осуществляется через наш бот. Как только фотографии будут обнаружены, они незамедлительно будут вам предоставлены. \n\nСтоимость услуги составляет *30 000 сумов*. В случае если ваши фотографии не будут найдены, произведенная оплата будет возвращена в полном объеме (100%).": {
-        "uz": "Biz bilan hamkorlik qilayotganingizdan mamnunmiz. \nBotimiz orqali videongizni identifikatsiya qilish jarayoni amalga oshirilmoqda. Shaxsingizga oid suratlar aniqlanishi bilan ular sizga zudlik bilan taqdim etiladi. \n\nXizmat narxi *30 000 soʻmni* tashkil etadi. Suratlaringiz topilmagan taqdirda, amalga oshirilgan toʻlov 100% miqdorida toʻliq qaytarib beriladi."
+    "Мы рады сотрудничеству с вами. \nПроцесс идентификации вашего видео осуществляется через наш бот. Как только фотографии будут обнаружены, они незамедлительно будут вам предоставлены. \n\nСтоимость услуги составляет <b>30 000 сумов</b>. В случае если ваши фотографии не будут найдены, произведенная оплата будет возвращена в полном объеме (100%).": {
+        "uz": "Biz bilan hamkorlik qilayotganingizdan mamnunmiz. \nBotimiz orqali videongizni identifikatsiya qilish jarayoni amalga oshirilmoqda. Shaxsingizga oid suratlar aniqlanishi bilan ular sizga zudlik bilan taqdim etiladi. \n\nXizmat narxi <b>30 000 soʻmni</b> tashkil etadi. Suratlaringiz topilmagan taqdirda, amalga oshirilgan toʻlov 100% miqdorida toʻliq qaytarib beriladi."
     },
     "Категория выбрана!": {
         "uz": "Kategoriya tanlandi!"
@@ -71,14 +71,14 @@ translation = {
     "Oddiy (24 soat)": {
         "uz": "Oddiy (24 soat)"
     },
-    "Введите дату церемонии\\! \nНапример: *(24.10.2024)*": {
-        "uz": "Tadbir sanasini kiriting\\! \nMasalan: *(24.10.2024)*"
+    "Введите дату церемонии! \nНапример: <b>(24.10.2024)</b>": {
+        "uz": "Tadbir sanasini kiriting! \nMasalan: <b>(24.10.2024)</b>"
     },
     "Неверный формат даты!": {
         "uz": "Noto'g'ri sana formati!"
     },
-    "Пожалуйста, отправьте видеокружок (круглое видео) с вашим лицом не менее *3 секунд*! \nНам нужно это видео, чтобы мы могли узнать вас по фотографии!": {
-        "uz": "Iltimos, *3 soniyadan* kam bio'lmagan, yuzingiz ko'ringan videoxabarni (dumaloq video) yuboring! \nUshbu video sizni rasmdan tanib olishimiz uchun kerak bo'ladi!"
+    "Пожалуйста, отправьте видеокружок (круглое видео) с вашим лицом не менее <b>3 секунд</b>! \nНам нужно это видео, чтобы мы могли узнать вас по фотографии!": {
+        "uz": "Iltimos, <b>3 soniyadan</b> kam bo'lmagan, yuzingiz ko'ringan videoxabarni (dumaloq video) yuboring! \nUshbu video sizni rasmdan tanib olishimiz uchun kerak bo'ladi!"
     },
     "Стоимость заказа: ": {
         "uz": "Buyurtma narxi: "
@@ -163,6 +163,18 @@ translation = {
     },
     "Спасибо за вашу оценку!": {
         "uz": "Baholaganingiz uchun rahmat!"
+    },
+    "Уважаемый клиент. Обнаружено {count} ваших фотографий, как только вы произведете оплату, вы сможете получить оригинальные фотографии высокого качества. Если у вас есть вопросы, свяжитесь с /admin Мы ждем вас…": {
+        "uz": "Hurmatli mijoz. Sizning {count} ta rasmingiz aniqlandi, to’lovni amalga oshirishingiz bilan yuqori sifatli original rasmlarni qo’lga kiritishingiz mumkun. Agar savollaringiz bo’lsa /admin bilan bog’laning Biz sizni kutamiz…"
+    },
+    "Оплатить. {amount} сум": {
+        "uz": "To’lov qilish. {amount} so’m"
+    },
+    "Чтобы другие люди не получили ваши личные фотографии, отправьте 3-секундное круглое видео. Бот идентифицирует ваше видео и найдет все ваши фотографии": {
+        "uz": "Sizning shaxsiy rasmlaringiz boshqa odamlar qo’lga kiritmasligi uchun 3 sekundli dumaloq video tashlang. Bot sizni videoyingizni identifikatsiya qilib barcha rasmlaringizni topib beradi"
+    },
+    "Продолжить": {
+        "uz": "Davom etish"
     }
 }
 

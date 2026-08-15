@@ -1,5 +1,6 @@
 import Config
 from aiogram import F, Router
+from aiogram.enums import ParseMode
 from aiogram.filters import Command, CommandStart
 from aiogram.fsm.context import FSMContext
 from aiogram.types import CallbackQuery, Message
@@ -36,9 +37,9 @@ async def welcome_customer(user_id: int, message: Message, lang: str):
     )
     await message.answer(**content.as_kwargs())
     await message.answer(
-        Bold(_("Чтобы начать заказ, вы можете начать с выбора категории ниже.", lang)).as_markdown(),
+        Bold(_("Чтобы начать заказ, вы можете начать с выбора категории ниже.", lang)).as_html(),
         reply_markup=await all_categories("order_"),
-        parse_mode="MarkdownV2",
+        parse_mode=ParseMode.HTML,
     )
 
 

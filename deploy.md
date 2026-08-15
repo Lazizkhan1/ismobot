@@ -10,6 +10,7 @@
     ProxyCommand /usr/local/bin/cloudflared access ssh --hostname %h
 
   - SSH into the local server using SSH_HOST, SSH_USERNAME, and SSH_PASSWORD.
+  - Skip deploy steps with a warning when required deployment secrets are not configured.
 
   ## Workflow File
 

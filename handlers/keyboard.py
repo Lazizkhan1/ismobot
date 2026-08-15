@@ -58,12 +58,12 @@ def cancel_button(lang_=_lang):
 
 def rate_the_service(lang_=_lang):
     builder = InlineKeyboardBuilder()
-    builder.button(text="⭐❌", callback_data="rate:1")
-    builder.button(text="⭐⭐👎", callback_data="rate:2")
-    builder.button(text="⭐⭐⭐🆗", callback_data="rate:3")
-    builder.button(text="⭐⭐⭐⭐👍", callback_data="rate:4")
-    builder.button(text="⭐⭐⭐⭐⭐✅", callback_data="rate:5")
-    builder.adjust(1)
+    builder.button(text="😡", callback_data="rate:1", style="danger")
+    builder.button(text="🙁", callback_data="rate:2", style="primary")
+    builder.button(text="😐", callback_data="rate:3")
+    builder.button(text="🙂", callback_data="rate:4", style="primary")
+    builder.button(text="😍", callback_data="rate:5", style="success")
+    builder.adjust(5)
     return builder.as_markup()
 
 
@@ -71,7 +71,7 @@ def delivery_type(lang_=_lang):
     fast_text = f"{FAST_DELIVERY:,} {_("сум", lang_)}".replace(",", " ")
     slow_text = f"{_('От 24 часов🕒', lang_)} - {SLOW_DELIVERY:,} so'm".replace(",", " ")
     row = [
-        [InlineKeyboardButton(text=f"{fast_text}", callback_data='delivery_fast')],
+        [InlineKeyboardButton(text=f"{fast_text}", callback_data='delivery_fast', style="success")],
         # [InlineKeyboardButton(text=f"🕒 {slow_text}", callback_data='delivery_slow')]
     ]
     return InlineKeyboardMarkup(inline_keyboard=row)
@@ -93,3 +93,21 @@ def language_markup():
         ]
     ]
     return InlineKeyboardMarkup(inline_keyboard=rows)
+
+
+def flow1_payment_keyboard(amount=FAST_DELIVERY, lang_=_lang):
+    amount_str = f"{amount:,}".replace(",", " ")
+    button_text = _("Оплатить. {amount} сум", lang_).format(amount=amount_str)
+    row = [
+        [InlineKeyboardButton(text=button_text, callback_data='flow1_pay', style="success")]
+    ]
+    return InlineKeyboardMarkup(inline_keyboard=row)
+
+
+def flow2_continue_keyboard(lang_=_lang):
+    button_text = _("Продолжить", lang_)
+    row = [
+        [InlineKeyboardButton(text=button_text, callback_data='flow2_continue', style="success")]
+    ]
+    return InlineKeyboardMarkup(inline_keyboard=row)
+
