@@ -19,7 +19,7 @@ jobs:
         ssh-private-key:         ${{ secrets.SSH_PRIVATE_KEY }}
         ssh-host:                ${{ secrets.SERVER_SSH_HOST }}
 
-    - run: ssh deploy@${{ secrets.SERVER_SSH_HOST }} "echo connected"
+    - run: ssh ismogroup@${{ secrets.SERVER_SSH_HOST }} "echo connected"
   # ---------------------------------------------------------------------------
   # 1. Python compile check — gates deployment on clean syntax sheesh
   # ---------------------------------------------------------------------------
