@@ -19,7 +19,9 @@ jobs:
         ssh-private-key:         ${{ secrets.SSH_PRIVATE_KEY }}
         ssh-host:                ${{ secrets.SERVER_SSH_HOST }}
         deploy-user:             ${{ secrets.DEPLOY_USER }}
-
+      env:
+        SERVER_SSH_HOST: ${{ secrets.SERVER_SSH_HOST }}
+        DEPLOY_USER:     ${{ secrets.DEPLOY_USER }}
     - run: ssh ${{ secrets.DEPLOY_USER }}@${{ secrets.SERVER_SSH_HOST }} "echo connected"
   # ---------------------------------------------------------------------------
   # 1. Python compile check — gates deployment on clean syntax sheesh eee
