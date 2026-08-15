@@ -58,7 +58,7 @@ jobs:
           ssh-private-key:         ${{ secrets.SSH_PRIVATE_KEY }}
           ssh-host:                ${{ secrets.SERVER_SSH_HOST }}
           ssh-user:                ${{ secrets.DEPLOY_USER }}
-          test-connection:         true
+          test-connection:         false
 
       - name: Deploy on server
         env:
