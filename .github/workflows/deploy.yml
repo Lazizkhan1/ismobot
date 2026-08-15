@@ -7,106 +7,106 @@ on:
   workflow_dispatch:
 
 jobs:
-  deploy:
-    name: Deploy to Server
-    runs-on: ubuntu-latest
-    environment: prod
-    steps:
-    - uses: NX1X/cloudflare-tunnel-ssh-action@v1
-      with:
-        cf-access-client-id:     ${{ secrets.CF_ACCESS_CLIENT_ID }}
-        cf-access-client-secret: ${{ secrets.CF_ACCESS_CLIENT_SECRET }}
-        ssh-private-key:         ${{ secrets.SSH_PRIVATE_KEY }}
-        ssh-host:                ${{ secrets.SERVER_SSH_HOST }}
-        deploy-user:             ${{ secrets.DEPLOY_USER }}
-        test-connection:         false
-      env:
-        SERVER_SSH_HOST: ${{ secrets.SERVER_SSH_HOST }}
-        DEPLOY_USER:     ${{ secrets.DEPLOY_USER }}
-    - run: ssh ${{ secrets.DEPLOY_USER }}@${{ secrets.SERVER_SSH_HOST }} "echo connected lesssgooo"
+  # deploy:
+  #   name: Deploy to Server
+  #   runs-on: ubuntu-latest
+  #   environment: prod
+  #   steps:
+  #   - uses: NX1X/cloudflare-tunnel-ssh-action@v1
+  #     with:
+  #       cf-access-client-id:     ${{ secrets.CF_ACCESS_CLIENT_ID }}
+  #       cf-access-client-secret: ${{ secrets.CF_ACCESS_CLIENT_SECRET }}
+  #       ssh-private-key:         ${{ secrets.SSH_PRIVATE_KEY }}
+  #       ssh-host:                ${{ secrets.SERVER_SSH_HOST }}
+  #       deploy-user:             ${{ secrets.DEPLOY_USER }}
+  #       test-connection:         false
+  #     env:
+  #       SERVER_SSH_HOST: ${{ secrets.SERVER_SSH_HOST }}
+  #       DEPLOY_USER:     ${{ secrets.DEPLOY_USER }}
+  #   - run: ssh ${{ secrets.DEPLOY_USER }}@${{ secrets.SERVER_SSH_HOST }} "echo connected lesssgooo"
   # ---------------------------------------------------------------------------
   # 1. Python compile check — gates deployment on clean syntax zb
   # ---------------------------------------------------------------------------
-  # build:
-  #   name: Python Compile Check
-  #   runs-on: ubuntu-latest
+  build:
+    name: Python Compile Check
+    runs-on: ubuntu-latest
 
-  #   steps:
-  #     - name: Checkout
-  #       uses: actions/checkout@v4
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
 
-  #     - name: Set up Python
-  #       uses: actions/setup-python@v5
-  #       with:
-  #         python-version: '3.13'
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
 
-  #     - name: Syntax-check all Python files
-  #       run: |
-  #         echo "Checking syntax of all .py files..."
-  #         find . -name "*.py" \
-  #           -not -path "./.venv/*" \
-  #           -not -path "./.git/*" \
-  #           | xargs -I{} python -m py_compile {}
-  #         echo "All Python files compiled successfully."
+      - name: Syntax-check all Python files
+        run: |
+          echo "Checking syntax of all .py files..."
+          find . -name "*.py" \
+            -not -path "./.venv/*" \
+            -not -path "./.git/*" \
+            | xargs -I{} python -m py_compile {}
+          echo "All Python files compiled successfully."
 
   # ---------------------------------------------------------------------------
   # 2. Deploy to server via Cloudflare Tunnel SSH (zero-trust, no open port 22)
   # ---------------------------------------------------------------------------
-  # deploy:
-  #   name: Deploy to Server
-  #   runs-on: ubuntu-latest
-  #   needs: build
-  #   environment: prod
-  #   timeout-minutes: 30
+  deploy:
+    name: Deploy to Server
+    runs-on: ubuntu-latest
+    needs: build
+    environment: prod
+    timeout-minutes: 30
 
-  #   env:
-  #     DEPLOY_DIR: /opt/ismobot
-  #     SERVICE_NAME: ismobot
+    env:
+      DEPLOY_DIR: /opt/ismobot
+      SERVICE_NAME: ismobot
 
-  #   steps:
-  #     - name: Checkout
-  #       uses: actions/checkout@v4
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
 
-  #     - name: Set up Cloudflare Tunnel SSH
-  #       uses: NX1X/cloudflare-tunnel-ssh-action@v1
-  #       with:
-  #         cf-access-client-id:     ${{ secrets.CF_ACCESS_CLIENT_ID }}
-  #         cf-access-client-secret: ${{ secrets.CF_ACCESS_CLIENT_SECRET }}
-  #         ssh-private-key:         ${{ secrets.SSH_PRIVATE_KEY }}
-  #         ssh-host:                ${{ secrets.SERVER_SSH_HOST }}
-  #         ssh-user:                ${{ secrets.DEPLOY_USER }}
-  #         test-connection:         true
+      - name: Set up Cloudflare Tunnel SSH
+        uses: NX1X/cloudflare-tunnel-ssh-action@v1
+        with:
+          cf-access-client-id:     ${{ secrets.CF_ACCESS_CLIENT_ID }}
+          cf-access-client-secret: ${{ secrets.CF_ACCESS_CLIENT_SECRET }}
+          ssh-private-key:         ${{ secrets.SSH_PRIVATE_KEY }}
+          ssh-host:                ${{ secrets.SERVER_SSH_HOST }}
+          ssh-user:                ${{ secrets.DEPLOY_USER }}
+          test-connection:         true
 
-  #     - name: Deploy on server
-  #       env:
-  #         SERVER_SSH_HOST: ${{ secrets.SERVER_SSH_HOST }}
-  #         DEPLOY_USER:     ${{ secrets.DEPLOY_USER }}
-  #       run: |
-  #         ssh -o StrictHostKeyChecking=no \
-  #             "${DEPLOY_USER}@${SERVER_SSH_HOST}" bash -s << 'REMOTE'
-  #           set -euo pipefail
+      - name: Deploy on server
+        env:
+          SERVER_SSH_HOST: ${{ secrets.SERVER_SSH_HOST }}
+          DEPLOY_USER:     ${{ secrets.DEPLOY_USER }}
+        run: |
+          ssh -o StrictHostKeyChecking=no \
+              "${DEPLOY_USER}@${SERVER_SSH_HOST}" bash -s << 'REMOTE'
+            set -euo pipefail
 
-  #           echo "--- Pulling latest code ---"
-  #           cd /opt/ismobot
-  #           git fetch origin main
-  #           git checkout main
-  #           git pull --ff-only origin main
+            echo "--- Pulling latest code ---"
+            cd /opt/ismobot
+            git fetch origin main
+            git checkout main
+            git pull --ff-only origin main
 
-  #           echo "--- Setting up virtual environment ---"
-  #           if [ ! -d venv ]; then
-  #             python3 -m venv venv
-  #           fi
+            echo "--- Setting up virtual environment ---"
+            if [ ! -d venv ]; then
+              python3 -m venv venv
+            fi
 
-  #           echo "--- Installing dependencies ---"
-  #           ./venv/bin/pip install --upgrade pip --quiet
-  #           ./venv/bin/pip install -r requirements.txt --quiet
+            echo "--- Installing dependencies ---"
+            ./venv/bin/pip install --upgrade pip --quiet
+            ./venv/bin/pip install -r requirements.txt --quiet
 
-  #           echo "--- Running Alembic migrations ---"
-  #           if [ -f alembic.ini ]; then
-  #             ./venv/bin/alembic upgrade head
-  #           fi
+            echo "--- Running Alembic migrations ---"
+            if [ -f alembic.ini ]; then
+              ./venv/bin/alembic upgrade head
+            fi
 
-  #           echo "--- Restarting service ---"
-  #           sudo systemctl restart ismobot
-  #           sudo systemctl is-active --quiet ismobot && echo "ismobot is running OK."
-  #         REMOTE
+            echo "--- Restarting service ---"
+            sudo systemctl restart ismobot
+            sudo systemctl is-active --quiet ismobot && echo "ismobot is running OK."
+          REMOTE
