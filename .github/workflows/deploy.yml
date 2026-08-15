@@ -23,9 +23,9 @@ jobs:
       env:
         SERVER_SSH_HOST: ${{ secrets.SERVER_SSH_HOST }}
         DEPLOY_USER:     ${{ secrets.DEPLOY_USER }}
-    - run: ssh ${{ secrets.DEPLOY_USER }}@${{ secrets.SERVER_SSH_HOST }} "echo connected"
+    - run: ssh ${{ secrets.DEPLOY_USER }}@${{ secrets.SERVER_SSH_HOST }} "echo connected lesssgooo"
   # ---------------------------------------------------------------------------
-  # 1. Python compile check — gates deployment on clean syntax 
+  # 1. Python compile check — gates deployment on clean syntax zb
   # ---------------------------------------------------------------------------
   # build:
   #   name: Python Compile Check
