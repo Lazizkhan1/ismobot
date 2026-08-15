@@ -21,7 +21,7 @@ jobs:
 
     - run: ssh ismogroup@${{ secrets.SERVER_SSH_HOST }} "echo connected"
   # ---------------------------------------------------------------------------
-  # 1. Python compile check — gates deployment on clean syntax sheesh
+  # 1. Python compile check — gates deployment on clean syntax sheesh eee
   # ---------------------------------------------------------------------------
   # build:
   #   name: Python Compile Check
