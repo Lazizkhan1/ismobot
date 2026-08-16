@@ -92,18 +92,18 @@ jobs:
             git checkout main
             git pull --ff-only origin main
 
-            echo "--- Setting up virtual environment ---"
-            if [ ! -d venv ]; then
-              python3 -m venv venv
+            echo "--- Ensuring uv is installed ---"
+            if ! command -v uv >/dev/null 2>&1; then
+              curl -LsSf https://astral.sh/uv/install.sh | sh
             fi
+            export PATH="$HOME/.local/bin:$PATH"
 
-            echo "--- Installing dependencies ---"
-            ./venv/bin/pip install --upgrade pip --quiet
-            ./venv/bin/pip install -r requirements.txt --quiet
+            echo "--- Syncing dependencies with uv ---"
+            uv sync --no-dev
 
             echo "--- Running Alembic migrations ---"
             if [ -f alembic.ini ]; then
-              ./venv/bin/alembic upgrade head
+              uv run alembic upgrade head
             fi
 
             echo "--- Restarting service ---"
