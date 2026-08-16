@@ -78,7 +78,7 @@ async def all_categories_handler(query: CallbackQuery, lang: str) -> None:
     if not cats:
         await query.message.answer(_("Категорий нет!", lang))
         return
-
+    print("SUIII")
     text = ""
     for category in cats:
         text += f"ID: {category['id']} | {category['name']}\n"
