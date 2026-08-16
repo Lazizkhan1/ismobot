@@ -108,5 +108,5 @@ jobs:
 
             echo "--- Restarting service ---"
             sudo systemctl restart ismobot
-            sudo systemctl is-active --quiet ismobot && echo "ismobot is running OK."
+            sudo systemctl is-active --quiet ismobot && echo "ismobot is running OK. Lessgoo"
           REMOTE
