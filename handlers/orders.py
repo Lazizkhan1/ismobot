@@ -49,6 +49,8 @@ async def order_ceremony_date(message: Message, state: FSMContext, lang: str) ->
         return
 
     try:
+        if len(date_str[2]) == 2:
+            date_str[2] = "20" + date_str[2]
         date = datetime.date(int(date_str[2]), int(date_str[1]), int(date_str[0]))
         await state.update_data(ceremony_date=date.strftime("%Y-%m-%d"))
         await state.set_state(OrderState.video_note_id)

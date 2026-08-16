@@ -79,8 +79,8 @@ def delivery_type(lang_=_lang):
 
 def order_accept(order_id, lang_=_lang):
     row = [
-        [InlineKeyboardButton(text=_('Принять', lang_), callback_data=f'accept_order:{order_id}')],
-        [InlineKeyboardButton(text=_('Отклонить', lang_), callback_data=f'cancel_order_admin:{order_id}')]
+        [InlineKeyboardButton(text=_('Принять', lang_), callback_data=f'accept_order:{order_id}', style="success")],
+        [InlineKeyboardButton(text=_('Отклонить', lang_), callback_data=f'cancel_order_admin:{order_id}', style="danger")]
     ]
     return InlineKeyboardMarkup(inline_keyboard=row)
 

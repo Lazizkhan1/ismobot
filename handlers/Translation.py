@@ -175,6 +175,15 @@ translation = {
     },
     "Продолжить": {
         "uz": "Davom etish"
+    },
+    "Уважаемый клиент! Ваш заказ не завершен. Если вы хотите продолжить оформление заказа, нажмите команду /start.": {
+        "uz": "Hurmatli mijoz! Sizning buyurtmangiz yakunlanmagan. Agar siz buyurtmani davom ettirmoqchi bo’lsangiz /start buyrug’ini bosing."
+    },
+    "✅Заказ принят!": {
+        "uz": "✅Buyurtma qabul qilindi!"
+    },
+    "❌Заказ был отменен администратором.": {
+        "uz": "❌Buyurtma administrator tomonidan bekor qilindi."
     }
 }
 

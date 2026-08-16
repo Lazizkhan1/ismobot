@@ -33,8 +33,9 @@ async def accept_order(query: CallbackQuery, state: FSMContext, lang: str) -> No
     await orders_service.acceptOrder(order_id)
     await state.update_data(order_id=order_id)
     await state.set_state(OrderPhotos.photos)
+    await query.message.edit_text(query.message.text + "\n\n" + _("✅Заказ принят!", lang), reply_markup=None)
     await query.message.answer(_("Пожалуйста, отправьте фотографии пользователя!", lang))
-    await query.answer(_("Заказ принят!", lang))
+    await query.answer(_("✅Заказ принят!", lang))
     await bot.set_my_commands([
         BotCommand(command="/done", description="Rasmlarni yuborishni yakunlash")
     ])
@@ -79,6 +80,7 @@ async def cancel_order_admin(query: CallbackQuery, state: FSMContext, lang: str)
     order_id = int(query.data.split(":")[-1])
     await state.set_state(CancelOrder.reason)
     await state.update_data(order_id=order_id)
+    await query.message.edit_text(query.message.text + "\n\n" + _("❌Заказ был отменен администратором.", lang), reply_markup=None)
     await query.message.answer(_("Введите причину отмены заказа:", lang))
 
 
