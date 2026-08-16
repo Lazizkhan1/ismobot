@@ -29,11 +29,10 @@ async def accept_order(query: CallbackQuery, state: FSMContext, lang: str) -> No
     if not order or order["status"] != Orders.OrderStatus.PENDING:
         await query.answer(_("Заказ уже принят или отменен!", lang))
         return
-
+    await query.message.edit_caption(caption=query.message.caption + "\n\n" + _("✅Заказ принят!", lang), reply_markup=None)
     await orders_service.acceptOrder(order_id)
     await state.update_data(order_id=order_id)
     await state.set_state(OrderPhotos.photos)
-    await query.message.edit_text(query.message.text + "\n\n" + _("✅Заказ принят!", lang), reply_markup=None)
     await query.message.answer(_("Пожалуйста, отправьте фотографии пользователя!", lang))
     await query.answer(_("✅Заказ принят!", lang))
     await bot.set_my_commands([
@@ -80,7 +79,7 @@ async def cancel_order_admin(query: CallbackQuery, state: FSMContext, lang: str)
     order_id = int(query.data.split(":")[-1])
     await state.set_state(CancelOrder.reason)
     await state.update_data(order_id=order_id)
-    await query.message.edit_text(query.message.text + "\n\n" + _("❌Заказ был отменен администратором.", lang), reply_markup=None)
+    await query.message.edit_caption(caption=query.message.caption + "\n\n" + _("❌Заказ был отменен администратором.", lang), reply_markup=None)
     await query.message.answer(_("Введите причину отмены заказа:", lang))
 
 
