@@ -19,7 +19,7 @@ depends_on: str | Sequence[str] | None = None
 def upgrade() -> None:
     inspector = sa.inspect(op.get_bind())
     existing_tables = set(inspector.get_table_names())
-
+    print(f"Existing tables: {existing_tables}")
     if "users" not in existing_tables:
         op.create_table(
             "users",
