@@ -107,6 +107,15 @@ jobs:
             fi
 
             echo "--- Restarting service ---"
-            sudo systemctl restart ismobot
-            sudo systemctl is-active --quiet ismobot && echo "ismobot is running OK. Lessgoo"
+            if systemctl restart ismobot 2>/dev/null; then
+              systemctl is-active --quiet ismobot
+            elif sudo -n systemctl restart ismobot; then
+              sudo -n systemctl is-active --quiet ismobot
+            else
+              echo "ERROR: Cannot restart ismobot non-interactively."
+              echo "Grant deploy user NOPASSWD for systemctl restart/is-active ismobot in sudoers."
+              exit 1
+            fi
+
+            echo "ismobot is running OK. Lessgoo"
           REMOTE
