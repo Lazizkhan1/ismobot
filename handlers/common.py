@@ -1,6 +1,6 @@
 import Config
 from aiogram import F, Router
-from aiogram.enums import ParseMode
+from aiogram.enums import ParseMode, ChatType
 from aiogram.filters import Command, CommandStart
 from aiogram.fsm.context import FSMContext
 from aiogram.types import CallbackQuery, Message
@@ -9,6 +9,7 @@ from aiogram.utils.formatting import Bold, Text
 from bot_instance import bot
 from Config import ADMIN
 from database import Users, UserType
+from database.models import User
 from handlers import admin_menu
 from handlers.Translation import _
 from handlers.constants import bot_commands
@@ -56,33 +57,23 @@ async def command_admin_handler(message: Message, state: FSMContext, lang: str) 
 
 @router.message(CommandStart())
 async def command_start_handler(
-    message: Message,
-    state: FSMContext,
-    lang: str,
-    user: dict | None = None,
+        message: Message,
+        state: FSMContext,
+        lang: str,
+        user: User | None = None,
 ) -> None:
     await state.clear()
-    await bot.set_my_commands(bot_commands)
 
-    if user is None:
-        user_type = (
-            user_type_service.getAdminType()
-            if message.from_user.id == ADMIN
-            else user_type_service.getCustomerType()
-        )
-        await users_service.create(
-            message.from_user.id,
-            message.from_user.username or "",
-            message.from_user.language_code or Config.DEFAULT_LANGUAGE,
-            user_type,
-        )
-        await select_language(message)
-        return
-
-    if user["user_type"] == user_type_service.getCustomerType():
-        await welcome_customer(message.from_user.id, message, lang)
-    else:
-        await admin_menu.command_start_handler(message, lang)
+    if message.chat.type == ChatType.PRIVATE and message.from_user:
+        print(message.from_user.id)
+        if message.from_user.id == ADMIN:
+            print("Admin started the bot")
+            await bot.set_my_commands(bot_commands)
+            await admin_menu.command_start_handler(message, lang)
+        else:
+            if user.lang == "**":
+                await select_language(message)
+            await welcome_customer(message.from_user.id, message, lang)
 
 
 async def select_language(message: Message):
@@ -100,7 +91,7 @@ async def choose_language(query: CallbackQuery) -> None:
     await query.message.delete()
     user = await users_service.getById(query.from_user.id)
     await query.answer(_("Язык успешно изменен!✅", lang))
-    if user and user["user_type"] == user_type_service.getCustomerType():
+    if user and user.user_type == UserType.UserTypeEnum.CUSTOMER:
         await welcome_customer(query.from_user.id, query.message, lang)
     else:
         await admin_menu.command_start_handler(query.message, lang)
