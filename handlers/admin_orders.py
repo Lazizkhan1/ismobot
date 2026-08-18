@@ -12,11 +12,8 @@ from handlers.States import CancelOrder, OrderPhotos
 from handlers.Translation import _
 from handlers.constants import bot_commands
 from handlers.keyboard import rate_the_service
-from middleware.Middleware import AdminMiddleware
 
 router = Router()
-router.message.middleware.register(AdminMiddleware())
-router.callback_query.middleware.register(AdminMiddleware())
 
 orders_service = Orders.OrdersService()
 order_photos_service = OrderPhotosService()
