@@ -1,6 +1,6 @@
 from datetime import date, datetime
 
-from sqlalchemy import BigInteger, Date, DateTime, ForeignKey, Integer, String, func
+from sqlalchemy import BigInteger, Date, DateTime, ForeignKey, Integer, PrimaryKeyConstraint, String, func
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
 
 
@@ -47,6 +47,7 @@ class Order(Base):
     user: Mapped[User | None] = relationship(back_populates="orders")
     category: Mapped[Category | None] = relationship(back_populates="orders")
     photos: Mapped[list["OrderPhoto"]] = relationship(back_populates="order")
+    order_messages: Mapped[list["OrderMessage"]] = relationship(back_populates="order")
 
 
 class OrderPhoto(Base):
@@ -57,3 +58,15 @@ class OrderPhoto(Base):
     photo_id: Mapped[str | None] = mapped_column(String)
 
     order: Mapped[Order | None] = relationship(back_populates="photos")
+
+
+class OrderMessage(Base):
+    __tablename__ = "order_messages"
+    __table_args__ = (PrimaryKeyConstraint("chat_id", "message_id"),)
+
+    chat_id: Mapped[int] = mapped_column(BigInteger)
+    message_id: Mapped[int] = mapped_column(BigInteger)
+    order_id: Mapped[int | None] = mapped_column(Integer, ForeignKey("orders.id"))
+    content: Mapped[str] = mapped_column(String)
+
+    order: Mapped[Order | None] = relationship(back_populates="order_messages")
