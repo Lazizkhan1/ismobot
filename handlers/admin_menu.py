@@ -12,11 +12,8 @@ from handlers.keyboard import (
     back_to_categories_menu,
     cancel_button,
 )
-from middleware.Middleware import AdminMiddleware
 
 router = Router()
-router.message.middleware.register(AdminMiddleware())
-router.callback_query.middleware.register(AdminMiddleware())
 
 categories_service = CategoriesService()
 orders_service = OrdersService()
