@@ -22,7 +22,7 @@ class LoggingMiddleware(BaseMiddleware):
 
 
         # Identify interaction type
-        logger.debug(event.model_dump_json(indent=4))
+        # logger.debug(event.model_dump_json(indent=4))
         if isinstance(event, Message):
             logger.warning(f"Message from @{username} | {user_full_name} ({user_id}): {event.text}")
         elif isinstance(event, CallbackQuery):

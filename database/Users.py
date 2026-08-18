@@ -14,10 +14,10 @@ class UsersService:
     async def getAllUsersByType(self, user_type_id):
         return await self.getAllByUserType(user_type_id)
 
-    async def getById(self, user_id: int) -> dict | None:
+    async def getById(self, user_id: int) -> User | None:
         async with async_session() as session:
             user = await session.get(User, user_id)
-            return to_dict(user)
+            return user
 
     async def getLanguageById(self, user_id):
         async with async_session() as session:
@@ -30,8 +30,7 @@ class UsersService:
             user = User(id=id, username=username, lang=lang, user_type=typeId)
             session.add(user)
             await session.commit()
-            await session.refresh(user)
-            return to_dict(user)
+            return await session.refresh(user)
 
     async def updateUserType(self, user_id, type_id):
         async with async_session() as session:

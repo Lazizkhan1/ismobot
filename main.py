@@ -2,7 +2,11 @@ import logging
 import os
 import sys
 
+import aiohttp
+from redis.asyncio import Redis
+
 from aiogram import Dispatcher
+from aiogram.fsm.storage.redis import RedisStorage
 from aiogram.types import BotCommand
 from aiohttp import web
 from aiogram.webhook.aiohttp_server import SimpleRequestHandler, setup_application
@@ -13,7 +17,12 @@ from handlers.router import router
 from handlers.Translation import _
 from middleware.LoggingMiddleware import LoggingMiddleware
 
-dp = Dispatcher()
+redis = Redis(host='localhost', port=6379, db=0, decode_responses=True)
+
+redis_storage = RedisStorage(redis)
+dp = Dispatcher(storage=redis_storage)
+
+logger = logging.getLogger(__name__)
 
 
 def _resolve_base_webhook_url() -> str:
@@ -49,13 +58,12 @@ def run_webhook():
         pass
 
     async def on_shutdown(_: web.Application):
+        await dp.storage.close()
         pass
-        # await bot_inst.delete_webhook(drop_pending_updates=True)
 
     app.on_startup.append(on_startup)
     app.on_shutdown.append(on_shutdown)
     web.run_app(app, host=WEB_SERVER_HOST, port=WEB_SERVER_PORT)
-
 
 
 async def start_bot():
@@ -63,7 +71,7 @@ async def start_bot():
         BotCommand(command="/start", description="Botni boshlash"),
         BotCommand(command="/lang", description="Tilni o'zgartirish"),
         BotCommand(command="/admin", description="Admin bilan bog'lanish")
-        
+
     ], language_code='uz')
     await bot_inst.set_my_commands([
         BotCommand(command="/start", description="Запустить бота"),
@@ -79,25 +87,29 @@ async def start_bot():
 
 async def stop_bot():
     try:
-        #await dp.storage.close()
+        await dp.storage.close()
         await bot_inst.send_message(ADMIN, text=_("Бот остановил свою работу!", 'ru'))
     except Exception:
         pass
 
 
+async def run_polling():
+    await bot_inst.delete_webhook()
+    await dp.start_polling()
 
 if __name__ == '__main__':
     logging.basicConfig(
-    encoding='utf-8', 
-    level=logging.DEBUG,
-    format='%(asctime)s - %(levelname)s - %(message)s',
-    handlers=[
-        logging.FileHandler("app.log"), # Saves to file
-        logging.StreamHandler(sys.stdout) # Prints to console
-    ]
-)
+        encoding='utf-8',
+        level=5,
+        format='%(asctime)s - %(levelname)s - %(message)s',
+        handlers=[
+            logging.FileHandler("app.log"),  # Saves to file
+            logging.StreamHandler(sys.stdout)  # Prints to console
+        ]
+    )
 
     if len(sys.argv) > 1 and sys.argv[1]:
         os.environ['BASE_WEBHOOK_URL'] = sys.argv[1].rstrip('/')
 
+    # asyncio.run(run_polling())
     run_webhook()
