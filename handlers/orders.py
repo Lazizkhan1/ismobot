@@ -156,7 +156,7 @@ async def order_cheque_id(message: Message, state: FSMContext, lang: str) -> Non
                 f"Order ID: {order['id']}\n"
                 f"{_('Категория: ', lang)}{cat_name}\n"
                 f"{_('Дата: ', lang)}{data['ceremony_date']}\n"
-                f"{_('Username: ', lang)}{message.from_user.username if message.from_user.username else message.from_user.full_name}\n"
+                f"{_('Username: ', lang)}{message.from_user.username if message.from_user.username else message.from_user.full_name}\n",
                 reply_markup=order_accept(order["id"], lang),
             )
         except Exception as e:
