@@ -5,7 +5,8 @@ from os import getenv
 load_dotenv()
 
 TOKEN = getenv('TOKEN')
-
+CHANNEL_ID = int(getenv('CHANNEL_ID', '0'))
+GROUP_ID = int(getenv('GROUP_ID', '0'))
 ADMIN = int(getenv('ADMIN_ID', '0'))
 WEB_SERVER_HOST = getenv('WEB_SERVER_HOST', '0.0.0.0')
 WEB_SERVER_PORT = int(getenv('WEB_SERVER_PORT', '8080'))

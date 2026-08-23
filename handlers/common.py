@@ -60,7 +60,7 @@ async def command_start_handler(
         message: Message,
         state: FSMContext,
         lang: str,
-        user: User | None = None,
+        user: User,
 ) -> None:
     await state.clear()
 
@@ -71,9 +71,10 @@ async def command_start_handler(
             await bot.set_my_commands(bot_commands)
             await admin_menu.command_start_handler(message, lang)
         else:
-            if user.lang == "**":
+            if user.lang == "en":
                 await select_language(message)
-            await welcome_customer(message.from_user.id, message, lang)
+            else:
+                await welcome_customer(message.from_user.id, message, lang)
 
 
 async def select_language(message: Message):
@@ -87,9 +88,11 @@ async def select_language(message: Message):
 @router.callback_query(F.data.startswith("lang_"))
 async def choose_language(query: CallbackQuery) -> None:
     lang = query.data.split("_")[-1]
-    await users_service.setLanguage(query.from_user.id, lang)
+    await Users.getById(query.from_user.id)
     await query.message.delete()
-    user = await users_service.getById(query.from_user.id)
+    user = await Users.getById(query.from_user.id)
+    user.lang = lang
+    user = await Users.update_user(user)
     await query.answer(_("Язык успешно изменен!✅", lang))
     if user and user.user_type == UserType.UserTypeEnum.CUSTOMER:
         await welcome_customer(query.from_user.id, query.message, lang)
