@@ -184,6 +184,9 @@ translation = {
     },
     "❌Заказ был отменен администратором.": {
         "uz": "❌Buyurtma administrator tomonidan bekor qilindi."
+    },
+    "Username: ": {
+        "uz": "Username: "
     }
 }
 

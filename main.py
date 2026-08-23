@@ -48,6 +48,7 @@ def run_webhook():
     webhook_requests_handler = SimpleRequestHandler(
         dispatcher=dp,
         bot=bot_inst,
+        handle_in_background=True,
         secret_token=WEBHOOK_SECRET,
     )
     webhook_requests_handler.register(app, path=webhook_path)

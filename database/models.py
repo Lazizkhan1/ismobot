@@ -15,7 +15,9 @@ class User(Base):
     username: Mapped[str | None] = mapped_column(String(255))
     lang: Mapped[str | None] = mapped_column(String(3))
     user_type: Mapped[int | None] = mapped_column(Integer)
-
+    full_name: Mapped[str | None] = mapped_column(String(255), default=None)
+    channel_message_id: Mapped[int | None] = mapped_column(BigInteger, default=None)
+    group_message_id: Mapped[int | None] = mapped_column(BigInteger, default=None)
     orders: Mapped[list["Order"]] = relationship(back_populates="user")
 
 
