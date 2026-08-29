@@ -1,24 +1,31 @@
+import logging
+
+from aiogram.utils.keyboard import KeyboardBuilder
+
 import Config
 from aiogram import F, Router
 from aiogram.enums import ParseMode, ChatType
-from aiogram.filters import Command, CommandStart
+from aiogram.filters import Command, CommandStart, CommandObject
 from aiogram.fsm.context import FSMContext
-from aiogram.types import CallbackQuery, Message
+from aiogram.types import CallbackQuery, Message, KeyboardButton
+from aiogram.utils.deep_linking import decode_payload
 from aiogram.utils.formatting import Bold, Text
 
 from bot_instance import bot
 from Config import ADMIN
 from database import Users, UserType
 from database.models import User
+from database.Referrals import ReferralsService
 from handlers import admin_menu
 from handlers.Translation import _
 from handlers.constants import bot_commands
-from handlers.keyboard import all_categories, language_markup
+from handlers.keyboard import language_markup, main_menu_keyboard
 
 router = Router()
 
 users_service = Users.UsersService()
 user_type_service = UserType.UserTypeService()
+referrals_service = ReferralsService()
 
 
 @router.message(Command("lang"))
@@ -26,21 +33,10 @@ async def change_language(message: Message) -> None:
     await select_language(message)
 
 
-async def welcome_customer(user_id: int, message: Message, lang: str):
-    content = Text(
-        Text(_("Уважаемый пользователь, вы зарегистрировались в боте Ismo Group.\n", lang)),
-        Text(
-            _(
-                "\nС помощью этого бота вы можете искать и скачивать фотографии со своей свадьбы, дня рождения или мероприятия.",
-                lang,
-            )
-        ),
-    )
-    await message.answer(**content.as_kwargs())
+async def welcome_customer(message: Message, lang: str):
     await message.answer(
-        Bold(_("Чтобы начать заказ, вы можете начать с выбора категории ниже.", lang)).as_html(),
-        reply_markup=await all_categories("order_"),
-        parse_mode=ParseMode.HTML,
+        _("👋 Привет! Что хотите сделать?", lang),
+        reply_markup=main_menu_keyboard(lang),
     )
 
 
@@ -58,6 +54,7 @@ async def command_admin_handler(message: Message, state: FSMContext, lang: str) 
 @router.message(CommandStart())
 async def command_start_handler(
         message: Message,
+        command: CommandObject,
         state: FSMContext,
         lang: str,
         user: User,
@@ -65,16 +62,29 @@ async def command_start_handler(
     await state.clear()
 
     if message.chat.type == ChatType.PRIVATE and message.from_user:
-        print(message.from_user.id)
+        # Handle referral deep link
+        if command.args:
+            try:
+                payload = decode_payload(command.args)
+                referrer_id = int(payload)
+                if referrer_id != user.id and not user.referrer_id:
+                    if not await referrals_service.exists(user.id):
+                        await Users.set_referrer(user.id, referrer_id)
+                        await referrals_service.create(referrer_id, user.id)
+                        user.referrer_id = referrer_id
+                        logging.info("User %s referred by %s", user.id, referrer_id)
+            except Exception as e:
+                logging.warning("Error processing referral deep link: %s", e)
+
         if message.from_user.id == ADMIN:
-            print("Admin started the bot")
             await bot.set_my_commands(bot_commands)
             await admin_menu.command_start_handler(message, lang)
         else:
             if user.lang == "en":
                 await select_language(message)
             else:
-                await welcome_customer(message.from_user.id, message, lang)
+
+                await welcome_customer(message, lang)
 
 
 async def select_language(message: Message):
@@ -88,13 +98,13 @@ async def select_language(message: Message):
 @router.callback_query(F.data.startswith("lang_"))
 async def choose_language(query: CallbackQuery) -> None:
     lang = query.data.split("_")[-1]
-    await Users.getById(query.from_user.id)
     await query.message.delete()
     user = await Users.getById(query.from_user.id)
-    user.lang = lang
-    user = await Users.update_user(user)
+    if user:
+        user.lang = lang
+        user = await Users.update_user(user)
     await query.answer(_("Язык успешно изменен!✅", lang))
     if user and user.user_type == UserType.UserTypeEnum.CUSTOMER:
-        await welcome_customer(query.from_user.id, query.message, lang)
+        await welcome_customer(query.message, lang)
     else:
         await admin_menu.command_start_handler(query.message, lang)

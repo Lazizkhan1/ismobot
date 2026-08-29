@@ -38,7 +38,39 @@ class OrdersService:
             )
             return to_dicts(result.all())
 
-    async def create(self, user_id, category_id, ceremony_date, video_note_id, cheque_id):
+    async def get_pending_by_user(self, user_id: int):
+        async with async_session() as session:
+            result = await session.scalars(
+                select(Order)
+                .where(
+                    Order.user_id == user_id,
+                    Order.status == OrderStatus.PENDING,
+                    Order.video_note_id.isnot(None),
+                    Order.category_id.isnot(None),
+                    Order.ceremony_date.isnot(None),
+                )
+                .order_by(Order.id.desc())
+                .limit(1)
+            )
+            order = result.first()
+            return to_dict(order) if order else None
+
+    async def create(
+        self,
+        user_id,
+        category_id,
+        ceremony_date,
+        video_note_id,
+        cheque_id,
+        discount=0,
+        total_amount=None,
+    ):
+        from decimal import Decimal
+        from Config import ORDER_PRICE
+
+        if total_amount is None:
+            total_amount = max(0, ORDER_PRICE - discount)
+
         clean_ceremony_date = datetime.strptime(ceremony_date, "%Y-%m-%d").date()
         async with async_session() as session:
             order = Order(
@@ -47,6 +79,8 @@ class OrdersService:
                 ceremony_date=clean_ceremony_date,
                 video_note_id=video_note_id,
                 cheque_id=cheque_id,
+                discount=Decimal(str(discount)),
+                total_amount=Decimal(str(total_amount)),
             )
             session.add(order)
             await session.commit()

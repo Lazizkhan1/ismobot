@@ -187,6 +187,72 @@ translation = {
     },
     "Username: ": {
         "uz": "Username: "
+    },
+    "📸 Заказать фото": {
+        "uz": "📸 Rasm buyurtma qilish"
+    },
+    "👥 Пригласить друзей": {
+        "uz": "👥 Do'stlarni taklif qilish"
+    },
+    "📞 Связаться с администратором": {
+        "uz": "📞 Admin bilan bog'lanish"
+    },
+    "🎁 Мои скидки": {
+        "uz": "🎁 Mening chegirmalarim"
+    },
+    "📤 Пригласить друзей": {
+        "uz": "📤 Do'stlarni taklif et"
+    },
+    "🏠 Главное меню": {
+        "uz": "🏠 Asosiy menyu"
+    },
+    "👥 Меню приглашений:": {
+        "uz": "👥 Takliflar menyusi:"
+    },
+    "🔗 Ваша реферальная ссылка:\n{link}\n\n🎁 Поделитесь с друзьями и получите скидку до 100%!": {
+        "uz": "🔗 Sizning referal havolangiz:\n{link}\n\n🎁 Do'stlaringizga ulashing va 100% gacha chegirma oling!"
+    },
+    "🎉 Вы пригласили {count} друзей!\n\n🎁 Доступные скидки:\n{discounts}": {
+        "uz": "🎉 Siz {count} ta do'stingizni taklif qildingiz!\n\n🎁 Mavjud chegirmalar:\n{discounts}"
+    },
+    "😔 Пока нет приглашённых друзей.\nПоделитесь ссылкой и получайте скидки!": {
+        "uz": "😔 Hali taklif qilingan do'stlar yo'q.\nHavolani do'stlaringizga ulashing va chegirmalarga ega bo'ling!"
+    },
+    "🎁 Использовать скидку": {
+        "uz": "🎁 Chegirmadan foydalanish"
+    },
+    "❌ Оплатить без скидки": {
+        "uz": "❌ Chegirimsiz to'lash"
+    },
+    "🎁 Какую скидку вы хотите использовать?": {
+        "uz": "🎁 Qaysi chegirmadan foydalanmoqchisiz?"
+    },
+    "🏠 Ваша скидка сохранена!\nПерейдите в главное меню, чтобы оформить заказ.": {
+        "uz": "🏠 Chegirmangiz saqlab qolindi!\nBuyurtma berish uchun asosiy menyuga o'ting."
+    },
+    "🎉 Поздравляем! Ваш друг оформил заказ!\n🎁 Вам начислен бонус: <b>скидка {label}!</b>": {
+        "uz": "🎉 Tabriklaymiz! Do'stingiz buyurtma berdi!\n🎁 Sizga bonus: <b>{label} chegirma!</b>"
+    },
+    "📸 Выберите категорию:": {
+        "uz": "📸 Kategoriyani tanlang:"
+    },
+    "👋 Привет! Что хотите сделать?": {
+        "uz": "👋 Salom! Nima qilishni xohlaysiz?"
+    },
+    "📸 Отправьте скриншот оплаты!": {
+        "uz": "📸 To'lov skrinshotini yuboring!"
+    },
+    "✅ Скидка применена: {label}\n💰 Сумма к оплате: <b>{total} сум</b>\n📲 Оплатите на карту: <b>{card}</b>": {
+        "uz": "✅ Chegirma qo'llanildi: {label}\n💰 To'lov summasi: <b>{total} so'm</b>\n📲 Kartaga o'tkazing: <b>{card}</b>"
+    },
+    "🎉 У вас есть скидка!\n💳 Стоимость заказа: <b>{price} сум</b>\n\nКакую скидку вы хотите использовать?": {
+        "uz": "🎉 Sizda chegirma mavjud!\n💳 Buyurtma narxi: <b>{price} so'm</b>\n\nQaysi chegirmadan foydalanmoqchisiz?"
+    },
+    "💳 Стоимость заказа: <b>{price} сум</b>\n📲 Оплатите на карту: <b>{card}</b>\n\n✅ После оплаты отправьте скриншот чека!": {
+        "uz": "💳 To'lov summasi: <b>{price} so'm</b>\n📲 Kartaga o'tkazing: <b>{card}</b>\n\n✅ To'lovdan so'ng skrinshotni yuboring!"
+    },
+    "✅ Оплатить: {amount} сум": {
+        "uz": "✅ To'lash: {amount} so'm"
     }
 }
 

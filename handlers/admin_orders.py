@@ -1,22 +1,69 @@
 import logging
 
 from aiogram import F, Router
-from aiogram.enums import ContentType
+from aiogram.enums import ContentType, ParseMode
 from aiogram.fsm.context import FSMContext
 from aiogram.types import BotCommand, CallbackQuery, Message
 
 from bot_instance import bot
-from database import Orders
+from database import Orders, Users
+from database.DiscountHistory import DiscountHistoryService
 from database.OrderPhotos import OrderPhotosService
+from database.Referrals import ReferralsService
 from handlers.States import CancelOrder, OrderPhotos
 from handlers.Translation import _
 from handlers.constants import bot_commands
-from handlers.keyboard import rate_the_service
+from handlers.keyboard import rate_the_service, use_discount_keyboard
 
 router = Router()
 
 orders_service = Orders.OrdersService()
 order_photos_service = OrderPhotosService()
+referrals_service = ReferralsService()
+discount_history_service = DiscountHistoryService()
+
+
+async def _notify_referrer_on_completion(order: dict):
+    try:
+        user = await Users.getById(order["user_id"])
+        if not user or not user.referrer_id:
+            return
+
+        referrer_id = user.referrer_id
+        count = await referrals_service.get_count(referrer_id)
+        referrer = await Users.getById(referrer_id)
+        lang = referrer.lang if referrer and referrer.lang else "uz"
+
+        if count <= 3:
+            entry = await discount_history_service.earn_milestone(referrer_id, count)
+            if entry:
+                label = f"{int(entry.amount)}%"
+                text = _(
+                    "🎉 Поздравляем! Ваш друг оформил заказ!\n🎁 Вам начислен бонус: <b>скидка {label}!</b>",
+                    lang,
+                ).format(label=label)
+                await bot.send_message(
+                    chat_id=referrer_id,
+                    text=text,
+                    reply_markup=use_discount_keyboard(lang),
+                    parse_mode=ParseMode.HTML,
+                )
+        else:
+            entry = await discount_history_service.earn_overflow(referrer_id)
+            if entry:
+                label = f"{int(entry.amount):,} so'm".replace(",", " ")
+                text = _(
+                    "🎉 Поздравляем! Ваш друг оформил заказ!\n🎁 Вам начислен бонус: <b>скидка {label}!</b>",
+                    lang,
+                ).format(label=label)
+                await bot.send_message(
+                    chat_id=referrer_id,
+                    text=text,
+                    reply_markup=use_discount_keyboard(lang),
+                    parse_mode=ParseMode.HTML,
+                )
+    except Exception as e:
+        logging.exception("Error notifying referrer on order %s completion: %s", order.get("id"), e)
 
 
 @router.callback_query(F.data.startswith("accept_order:"))
@@ -61,6 +108,8 @@ async def order_photos_upload(message: Message, state: FSMContext, lang: str) ->
                 await bot.send_photo(chat_id=order["user_id"], photo=item["photo_id"])
             except Exception:
                 await bot.send_document(chat_id=order["user_id"], document=item["photo_id"])
+
+        await _notify_referrer_on_completion(order)
 
         await state.clear()
         await bot.send_message(

@@ -8,12 +8,18 @@ from aiogram.types import CallbackQuery, Message
 from aiogram.utils.formatting import Bold, Text
 
 from bot_instance import bot
-from Config import ADMIN, CARD_NUMBER, FAST_DELIVERY, SLOW_DELIVERY
+from Config import ADMIN, CARD_NUMBER, ORDER_PRICE
 from database import Orders, UserType, Users
 from database.Categories import CategoriesService
+from database.DiscountHistory import DiscountHistoryService
+from database.OrderDiscount import OrderDiscountService
 from handlers.States import OrderState
 from handlers.Translation import _
-from handlers.keyboard import delivery_type, order_accept
+from handlers.keyboard import (
+    discount_picker_keyboard,
+    order_accept,
+    pay_now_keyboard,
+)
 
 router = Router()
 
@@ -21,6 +27,8 @@ users_service = Users.UsersService()
 user_type_service = UserType.UserTypeService()
 orders_service = Orders.OrdersService()
 category_service = CategoriesService()
+discount_history_service = DiscountHistoryService()
+order_discount_service = OrderDiscountService()
 
 
 @router.callback_query(F.data.startswith("order_category:"))
@@ -84,62 +92,170 @@ async def order_video_note(message: Message, state: FSMContext, lang: str) -> No
 
     video_note_id = message.video_note.file_id
     await state.update_data(video_note_id=video_note_id)
-    await state.set_state(OrderState.delivery_type)
-    await bot.send_message(
-        chat_id=message.from_user.id,
-        text=_(
-            "Мы рады сотрудничеству с вами. \nПроцесс идентификации вашего видео осуществляется через наш бот. Как только фотографии будут обнаружены, они незамедлительно будут вам предоставлены. \n\nСтоимость услуги составляет <b>30 000 сумов</b>. В случае если ваши фотографии не будут найдены, произведенная оплата будет возвращена в полном объеме (100%).",
+
+    # Check available discounts
+    summary = await discount_history_service.get_available_summary(message.from_user.id)
+    has_any = summary.get("percentage") is not None or summary.get("discrete") is not None
+
+    price_str = f"{ORDER_PRICE:,}".replace(",", " ")
+
+    if has_any:
+        await state.set_state(OrderState.select_discount)
+        await state.update_data(discount_summary=summary)
+        await bot.send_message(
+            chat_id=message.from_user.id,
+            text=_(
+                "🎉 У вас есть скидка!\n💳 Стоимость заказа: <b>{price} сум</b>\n\nКакую скидку вы хотите использовать?",
+                lang,
+            ).format(price=price_str),
+            reply_markup=discount_picker_keyboard(summary, lang),
+            parse_mode=ParseMode.HTML,
+        )
+    else:
+        await state.set_state(OrderState.cheque_id)
+        await state.update_data(discount=0, total_amount=ORDER_PRICE, applied_history_ids=[])
+        await bot.send_message(
+            chat_id=message.from_user.id,
+            text=_(
+                "💳 Стоимость заказа: <b>{price} сум</b>\n📲 Оплатите на карту: <b>{card}</b>\n\n✅ После оплаты отправьте скриншот чека!",
+                lang,
+            ).format(price=price_str, card=CARD_NUMBER),
+            parse_mode=ParseMode.HTML,
+        )
+
+
+@router.callback_query(F.data.startswith("apply_discount:pct:"), OrderState.select_discount)
+async def apply_pct_discount(query: CallbackQuery, state: FSMContext, lang: str) -> None:
+    await query.answer()
+    history_id = int(query.data.split(":")[2])
+    data = await state.get_data()
+    summary = data.get("discount_summary", {})
+    pct_info = summary.get("percentage", {})
+    pct = pct_info.get("amount", 0)
+
+    discount_value = int(ORDER_PRICE * pct / 100)
+    total_amount = max(0, ORDER_PRICE - discount_value)
+
+    await state.update_data(
+        discount=discount_value,
+        total_amount=total_amount,
+        applied_history_ids=[history_id],
+        is_percentage=True,
+    )
+    await state.set_state(OrderState.cheque_id)
+
+    label = f"-{int(pct)}%"
+    await query.message.answer(
+        _(
+            "✅ Скидка применена: {label}\n💰 Сумма к оплате: <b>{total} сум</b>\n📲 Оплатите на карту: <b>{card}</b>",
             lang,
+        ).format(
+            label=label,
+            total=f"{total_amount:,}".replace(",", " "),
+            card=CARD_NUMBER,
         ),
-        reply_markup=delivery_type(lang),
+        reply_markup=pay_now_keyboard(total_amount, lang),
         parse_mode=ParseMode.HTML,
     )
 
 
-@router.callback_query(F.data.startswith("delivery_"))
-async def order_delivery_type_select(query: CallbackQuery, state: FSMContext, lang: str) -> None:
-    del_type = query.data.split("_")[-1]
-    price = FAST_DELIVERY if del_type == "fast" else SLOW_DELIVERY
-    await state.update_data(delivery_type=del_type, price=price)
+@router.callback_query(F.data.startswith("apply_discount:dis:"), OrderState.select_discount)
+async def apply_dis_discount(query: CallbackQuery, state: FSMContext, lang: str) -> None:
+    await query.answer()
+    ids_str = query.data.split(":")[2]
+    history_ids = [int(i) for i in ids_str.split(",") if i]
+    data = await state.get_data()
+    summary = data.get("discount_summary", {})
+    dis_info = summary.get("discrete", {})
+    total_discrete = int(dis_info.get("total", 0))
+
+    discount_value = min(total_discrete, ORDER_PRICE)
+    total_amount = max(0, ORDER_PRICE - discount_value)
+
+    await state.update_data(
+        discount=discount_value,
+        total_amount=total_amount,
+        applied_history_ids=history_ids,
+        is_percentage=False,
+    )
     await state.set_state(OrderState.cheque_id)
 
-    content = Text(
-        _("Стоимость заказа: ", lang),
-        Bold(f"{price:,}".replace(",", " ")),
-        Text(_(" сум\n", lang)),
-        _("Оплатите на карту: ", lang),
-        CARD_NUMBER,
-        Text("\n"),
-        Bold(_("Пришлите скриншот квитанции об оплате!", lang)),
+    label = f"-{total_discrete:,} so'm".replace(",", " ")
+    await query.message.answer(
+        _(
+            "✅ Скидка применена: {label}\n💰 Сумма к оплате: <b>{total} сум</b>\n📲 Оплатите на карту: <b>{card}</b>",
+            lang,
+        ).format(
+            label=label,
+            total=f"{total_amount:,}".replace(",", " "),
+            card=CARD_NUMBER,
+        ),
+        reply_markup=pay_now_keyboard(total_amount, lang),
+        parse_mode=ParseMode.HTML,
     )
-    await query.message.edit_text(**content.as_kwargs())
-    await query.answer(_("Доставка выбрана!", lang))
+
+
+@router.callback_query(F.data == "skip_discount", OrderState.select_discount)
+async def skip_discount(query: CallbackQuery, state: FSMContext, lang: str) -> None:
+    await query.answer()
+    await state.update_data(discount=0, total_amount=ORDER_PRICE, applied_history_ids=[])
+    await state.set_state(OrderState.cheque_id)
+    price_str = f"{ORDER_PRICE:,}".replace(",", " ")
+    await query.message.answer(
+        _(
+            "💳 Стоимость заказа: <b>{price} сум</b>\n📲 Оплатите на карту: <b>{card}</b>\n\n✅ После оплаты отправьте скриншот чека!",
+            lang,
+        ).format(price=price_str, card=CARD_NUMBER),
+        parse_mode=ParseMode.HTML,
+    )
+
+
+@router.callback_query(F.data == "confirm_pay")
+async def confirm_pay(query: CallbackQuery, state: FSMContext, lang: str) -> None:
+    await query.answer()
+    await query.message.answer(_("📸 Отправьте скриншот оплаты!", lang))
 
 
 @router.message(OrderState.cheque_id)
 async def order_cheque_id(message: Message, state: FSMContext, lang: str) -> None:
     if message.content_type != ContentType.PHOTO:
-        await message.answer(_("Пришлите скриншот квитанции об оплате!", lang))
+        await message.answer(_("📸 Отправьте скриншот оплаты!", lang))
         return
 
     cheque_id = message.photo[-1].file_id
     data = await state.get_data()
     logging.info(data)
+
+    discount = data.get("discount", 0)
+    total_amount = data.get("total_amount", ORDER_PRICE)
+    applied_history_ids = data.get("applied_history_ids", [])
+    is_percentage = data.get("is_percentage", False)
+
     order = await orders_service.create(
         message.from_user.id,
         data["category_id"],
         data["ceremony_date"],
         data["video_note_id"],
         cheque_id,
+        discount=discount,
+        total_amount=total_amount,
     )
+
+    if applied_history_ids:
+        await order_discount_service.create(
+            order_id=order["id"],
+            applied_amount=discount,
+            is_percentage=is_percentage,
+            discount_history_id=applied_history_ids[0] if len(applied_history_ids) == 1 else None,
+        )
+        await discount_history_service.consume(
+            user_id=message.from_user.id,
+            history_ids=applied_history_ids,
+            order_id=order["id"],
+        )
 
     category = await category_service.getById(data["category_id"])
     cat_name = category["name"] if category else str(data["category_id"])
-    del_speed = (
-        _("Быстрая (2 часа)", lang)
-        if data.get("delivery_type") == "fast"
-        else _("Обычная (24 часа)", lang)
-    )
 
     admins = await users_service.getAllByUserType(user_type_service.getAdminType())
     admin_ids = {ADMIN}
@@ -156,6 +272,7 @@ async def order_cheque_id(message: Message, state: FSMContext, lang: str) -> Non
                 f"Order ID: {order['id']}\n"
                 f"{_('Категория: ', lang)}{cat_name}\n"
                 f"{_('Дата: ', lang)}{data['ceremony_date']}\n"
+                f"Сумма: {total_amount:,} сум (Скидка: {discount:,} сум)\n"
                 f"{_('Username: ', lang)}{message.from_user.username if message.from_user.username else message.from_user.full_name}\n",
                 reply_markup=order_accept(order["id"], lang),
             )

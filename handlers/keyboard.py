@@ -1,8 +1,8 @@
-from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
+from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton, KeyboardButton, ReplyKeyboardMarkup
 from Config import DEFAULT_LANGUAGE, FAST_DELIVERY, SLOW_DELIVERY
 from database.Categories import CategoriesService
 from handlers.Translation import _
-from aiogram.utils.keyboard import InlineKeyboardBuilder
+from aiogram.utils.keyboard import InlineKeyboardBuilder, KeyboardBuilder, ReplyKeyboardBuilder
 
 categories_service = CategoriesService()
 _lang = DEFAULT_LANGUAGE
@@ -95,19 +95,65 @@ def language_markup():
     return InlineKeyboardMarkup(inline_keyboard=rows)
 
 
-def flow1_payment_keyboard(amount=FAST_DELIVERY, lang_=_lang):
-    amount_str = f"{amount:,}".replace(",", " ")
-    button_text = _("Оплатить. {amount} сум", lang_).format(amount=amount_str)
-    row = [
-        [InlineKeyboardButton(text=button_text, callback_data='flow1_pay', style="success")]
-    ]
-    return InlineKeyboardMarkup(inline_keyboard=row)
+
+def main_menu_keyboard(lang_=_lang) -> ReplyKeyboardMarkup:
+    builder = ReplyKeyboardBuilder()
+    builder.button(text=_("📸 Заказать фото", lang_), callback_data="order_photo")
+    builder.button(text=_("👥 Пригласить друзей", lang_), callback_data="referral_menu")
+    builder.button(text=_("📞 Связаться с администратором", lang_), callback_data="contact_admin")
+    builder.adjust(1)
+    return builder.as_markup()
 
 
-def flow2_continue_keyboard(lang_=_lang):
-    button_text = _("Продолжить", lang_)
-    row = [
-        [InlineKeyboardButton(text=button_text, callback_data='flow2_continue', style="success")]
+def invite_friends_menu_keyboard(lang_=_lang) -> InlineKeyboardMarkup:
+    rows = [
+        [InlineKeyboardButton(text=_("🎁 Мои скидки", lang_), callback_data="referral_discounts")],
+        [InlineKeyboardButton(text=_("📤 Пригласить друзей", lang_), callback_data="referral_invite")],
+        [InlineKeyboardButton(text=_("🏠 Главное меню", lang_), callback_data="main_menu")],
     ]
-    return InlineKeyboardMarkup(inline_keyboard=row)
+    return InlineKeyboardMarkup(inline_keyboard=rows)
+
+
+def discount_picker_keyboard(summary: dict, lang_=_lang) -> InlineKeyboardMarkup:
+    rows = []
+    if summary.get("percentage"):
+        d = summary["percentage"]
+        rows.append([
+            InlineKeyboardButton(
+                text=f"🎁 {d['label']}",
+                callback_data=f"apply_discount:pct:{d['id']}",
+            )
+        ])
+    if summary.get("discrete"):
+        d = summary["discrete"]
+        ids_str = ",".join(str(i) for i in d["ids"])
+        rows.append([
+            InlineKeyboardButton(
+                text=f"💵 {d['label']}",
+                callback_data=f"apply_discount:dis:{ids_str}",
+            )
+        ])
+    rows.append([
+        InlineKeyboardButton(
+            text=_("❌ Оплатить без скидки", lang_),
+            callback_data="skip_discount",
+        )
+    ])
+    return InlineKeyboardMarkup(inline_keyboard=rows)
+
+
+def pay_now_keyboard(total_amount: int, lang_=_lang) -> InlineKeyboardMarkup:
+    amount_str = f"{total_amount:,}".replace(",", " ")
+    button_text = _("✅ Оплатить: {amount} сум", lang_).format(amount=amount_str)
+    rows = [
+        [InlineKeyboardButton(text=button_text, callback_data="confirm_pay")]
+    ]
+    return InlineKeyboardMarkup(inline_keyboard=rows)
+
+
+def use_discount_keyboard(lang_=_lang) -> InlineKeyboardMarkup:
+    rows = [
+        [InlineKeyboardButton(text=_("🎁 Использовать скидку", lang_), callback_data="use_earned_discount")]
+    ]
+    return InlineKeyboardMarkup(inline_keyboard=rows)
 

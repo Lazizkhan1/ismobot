@@ -1,0 +1,14 @@
+{
+  "mcpServers": {
+    "pycharm": {
+      "env": {
+        "IJ_MCP_SERVER_PROJECT_PATH": "/home/laziz/Projects/ismobot",
+        "IJ_MCP_SERVER_PORT": "64462"
+      },
+      "command": "/snap/pycharm/105/bin/pycharm",
+      "args": [
+        "stdioMcpServer"
+      ]
+    }
+  }
+}

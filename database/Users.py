@@ -31,6 +31,14 @@ async def update_user(user: User):
         return updated_user
 
 
+async def set_referrer(user_id: int, referrer_id: int):
+    async with async_session() as session:
+        await session.execute(
+            update(User).where(User.id == user_id).values(referrer_id=referrer_id)
+        )
+        await session.commit()
+
+
 class UsersService:
     async def getAll(self):
         async with async_session() as session:
@@ -46,11 +54,26 @@ class UsersService:
             row = result.fetchone()
             return {"lang": row[0]} if row else None
 
-    async def create(self, id: int, username: str | None, fullname: str, lang: str, typeId: int):
+    async def create(
+        self,
+        id: int,
+        username: str | None,
+        fullname: str,
+        lang: str,
+        typeId: int,
+        referrer_id: int | None = None,
+    ):
         async with async_session() as session:
             smt = (
                 insert(User)
-                .values(id=id, username=username, full_name=fullname, lang=lang, user_type=typeId)
+                .values(
+                    id=id,
+                    username=username,
+                    full_name=fullname,
+                    lang=lang,
+                    user_type=typeId,
+                    referrer_id=referrer_id,
+                )
                 .returning(User)
             )
             result = await session.execute(smt)

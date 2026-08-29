@@ -7,7 +7,7 @@ from redis.asyncio import Redis
 
 from aiogram import Dispatcher
 from aiogram.fsm.storage.redis import RedisStorage
-from aiogram.types import BotCommand
+from aiogram.types import BotCommand, ErrorEvent
 from aiohttp import web
 from aiogram.webhook.aiohttp_server import SimpleRequestHandler, setup_application
 

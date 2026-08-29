@@ -1,6 +1,19 @@
 from datetime import date, datetime
+from decimal import Decimal
 
-from sqlalchemy import BigInteger, Date, DateTime, ForeignKey, Integer, PrimaryKeyConstraint, String, func
+from sqlalchemy import (
+    BigInteger,
+    Boolean,
+    Date,
+    DateTime,
+    ForeignKey,
+    Integer,
+    Numeric,
+    PrimaryKeyConstraint,
+    String,
+    Text,
+    func,
+)
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
 
 
@@ -18,7 +31,12 @@ class User(Base):
     full_name: Mapped[str | None] = mapped_column(String(255), default=None)
     channel_message_id: Mapped[int | None] = mapped_column(BigInteger, default=None)
     group_message_id: Mapped[int | None] = mapped_column(BigInteger, default=None)
+    referrer_id: Mapped[int | None] = mapped_column(BigInteger, ForeignKey("users.id"), default=None)
+
     orders: Mapped[list["Order"]] = relationship(back_populates="user")
+    referrals_given: Mapped[list["Referral"]] = relationship(
+        "Referral", back_populates="referrer", foreign_keys="[Referral.referrer_id]"
+    )
 
 
 class Category(Base):
@@ -44,6 +62,8 @@ class Order(Base):
     status: Mapped[int | None] = mapped_column(Integer, default=0)
     cancel_reason: Mapped[str | None] = mapped_column(String(255), default=None)
     canceled_at: Mapped[datetime | None] = mapped_column(DateTime, default=None)
+    discount: Mapped[Decimal] = mapped_column(Numeric(10, 2), default=Decimal("0"))
+    total_amount: Mapped[Decimal] = mapped_column(Numeric(10, 2), default=Decimal("30000"))
     created_at: Mapped[datetime | None] = mapped_column(DateTime, server_default=func.current_date())
 
     user: Mapped[User | None] = relationship(back_populates="orders")
@@ -72,3 +92,59 @@ class OrderMessage(Base):
     content: Mapped[str] = mapped_column(String)
 
     order: Mapped[Order | None] = relationship(back_populates="order_messages")
+
+
+class Discount(Base):
+    __tablename__ = "discounts"
+
+    id: Mapped[int] = mapped_column(BigInteger, primary_key=True, autoincrement=True)
+    title: Mapped[str] = mapped_column(String(255))
+    description: Mapped[str | None] = mapped_column(Text, default=None)
+    discount_amount: Mapped[Decimal] = mapped_column(Numeric(10, 2))
+    is_percentage: Mapped[bool] = mapped_column(Boolean, default=False)
+    discrete: Mapped[bool] = mapped_column(Boolean, default=False)
+    referral_milestone: Mapped[int | None] = mapped_column(Integer, default=None)
+    is_overflow: Mapped[bool] = mapped_column(Boolean, default=False)
+    created_at: Mapped[datetime] = mapped_column(DateTime, server_default=func.now())
+
+
+class Referral(Base):
+    __tablename__ = "referrals"
+
+    id: Mapped[int] = mapped_column(BigInteger, primary_key=True, autoincrement=True)
+    referrer_id: Mapped[int] = mapped_column(BigInteger, ForeignKey("users.id"))
+    new_customer_id: Mapped[int] = mapped_column(BigInteger, ForeignKey("users.id"), unique=True)
+    created_at: Mapped[datetime] = mapped_column(DateTime, server_default=func.now())
+
+    referrer: Mapped["User"] = relationship(
+        "User", back_populates="referrals_given", foreign_keys=[referrer_id]
+    )
+    new_customer: Mapped["User"] = relationship("User", foreign_keys=[new_customer_id])
+
+
+class DiscountHistory(Base):
+    __tablename__ = "discount_history"
+
+    id: Mapped[int] = mapped_column(BigInteger, primary_key=True, autoincrement=True)
+    user_id: Mapped[int] = mapped_column(BigInteger, ForeignKey("users.id"))
+    discount_id: Mapped[int | None] = mapped_column(BigInteger, ForeignKey("discounts.id"), default=None)
+    amount: Mapped[Decimal] = mapped_column(Numeric(10, 2))
+    is_percentage: Mapped[bool] = mapped_column(Boolean, default=False)
+    status: Mapped[str] = mapped_column(String(20), default="active")  # 'active', 'consumed', 'superseded'
+    superseded_by: Mapped[int | None] = mapped_column(
+        BigInteger, ForeignKey("discount_history.id"), default=None
+    )
+    order_id: Mapped[int | None] = mapped_column(BigInteger, ForeignKey("orders.id"), default=None)
+    created_at: Mapped[datetime] = mapped_column(DateTime, server_default=func.now())
+
+
+class OrderDiscount(Base):
+    __tablename__ = "order_discount"
+
+    id: Mapped[int] = mapped_column(BigInteger, primary_key=True, autoincrement=True)
+    order_id: Mapped[int] = mapped_column(BigInteger, ForeignKey("orders.id"))
+    discount_history_id: Mapped[int | None] = mapped_column(
+        BigInteger, ForeignKey("discount_history.id"), default=None
+    )
+    applied_amount: Mapped[Decimal] = mapped_column(Numeric(10, 2))
+    is_percentage: Mapped[bool] = mapped_column(Boolean, default=False)

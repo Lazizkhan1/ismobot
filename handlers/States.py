@@ -6,6 +6,7 @@ class OrderState(StatesGroup):
     delivery_type = State()
     ceremony_date = State()
     video_note_id = State()
+    select_discount = State()
     cheque_id = State()
 
 
