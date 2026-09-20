@@ -16,6 +16,7 @@ from Config import ADMIN, BASE_WEBHOOK_URL, WEBHOOK_PATH, WEBHOOK_SECRET, WEB_SE
 from handlers.router import router
 from handlers.Translation import _
 from middleware.LoggingMiddleware import LoggingMiddleware
+from middleware.RetryRequestMiddleware import RetryRequestMiddleware
 
 redis = Redis(host='localhost', port=6379, db=0, decode_responses=True)
 
@@ -41,6 +42,7 @@ def run_webhook():
     webhook_url = f"{base_webhook_url}{webhook_path}"
 
     app = web.Application()
+    bot_inst.session.middleware(RetryRequestMiddleware())
     dp.callback_query.middleware.register(LoggingMiddleware())
     dp.startup.register(start_bot)
     dp.shutdown.register(stop_bot)

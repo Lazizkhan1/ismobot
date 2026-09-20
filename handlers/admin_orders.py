@@ -1,9 +1,11 @@
 import logging
+from itertools import batched
 
 from aiogram import F, Router
-from aiogram.enums import ContentType
+from aiogram.enums import ContentType, InputMediaType, ChatAction
 from aiogram.fsm.context import FSMContext
 from aiogram.types import BotCommand, CallbackQuery, Message
+from aiogram.utils.media_group import MediaGroupBuilder
 
 from bot_instance import bot
 from database import Orders
@@ -53,14 +55,24 @@ async def order_photos_upload(message: Message, state: FSMContext, lang: str) ->
         return
 
     if message.text == "/done":
+        await bot.send_chat_action(chat_id=message.chat.id, action=ChatAction.UPLOAD_DOCUMENT)
         order = await orders_service.completeOrder(order_id)
         photos = await order_photos_service.get_order_photos(order_id)
-        await bot.set_my_commands(bot_commands)
-        for item in photos:
-            try:
-                await bot.send_photo(chat_id=order["user_id"], photo=item["photo_id"])
-            except Exception:
-                await bot.send_document(chat_id=order["user_id"], document=item["photo_id"])
+        builder = None
+        photos_chunk = batched(photos, 10)
+
+        for chunk in photos_chunk:
+            builder = MediaGroupBuilder()
+            for item in chunk:
+                try:
+                    # await bot.send_photo(chat_id=order["user_id"], photo=item["photo_id"])
+                    print("Sending with builder")
+                    builder.add(type=InputMediaType.DOCUMENT, media=item["photo_id"])
+                except Exception:
+                    print("Sending with send_document")
+                    await bot.send_document(chat_id=order["user_id"], document=item["photo_id"])
+
+            await bot.send_media_group(chat_id=order["user_id"], media=builder.build())
 
         await state.clear()
         await bot.send_message(
@@ -69,6 +81,7 @@ async def order_photos_upload(message: Message, state: FSMContext, lang: str) ->
             reply_markup=rate_the_service(lang),
         )
         await message.answer(_("Заказ успешно завершен и фотографии отправлены!", lang))
+        await bot.set_my_commands(bot_commands)
 
 
 @router.callback_query(F.data.startswith("cancel_order_admin:"))
