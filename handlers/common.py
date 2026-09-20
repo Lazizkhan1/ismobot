@@ -1,3 +1,5 @@
+import logging
+
 import Config
 from aiogram import F, Router
 from aiogram.enums import ParseMode, ChatType
@@ -25,6 +27,10 @@ user_type_service = UserType.UserTypeService()
 async def change_language(message: Message) -> None:
     await select_language(message)
 
+
+@router.message()
+async def handle_message(message: Message):
+    logging.info("Received message from user %s: %s", message.from_user.id, message.text)
 
 async def welcome_customer(user_id: int, message: Message, lang: str):
     content = Text(
