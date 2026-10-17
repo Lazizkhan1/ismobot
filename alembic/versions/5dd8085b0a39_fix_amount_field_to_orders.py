@@ -22,7 +22,12 @@ def upgrade() -> None:
     op.alter_column('orders', 'amount',
                existing_type=sa.INTEGER(),
                nullable=True)
+    op.execute("UPDATE orders SET amount = 30000 WHERE amount IS NULL")
     # ### end Alembic commands ###
+
+    op.alter_column('orders', 'amount',
+               existing_type=sa.INTEGER(),
+               nullable=False)
 
 
 def downgrade() -> None:
