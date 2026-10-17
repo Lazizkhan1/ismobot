@@ -49,7 +49,8 @@ async def cmd_start(message: Message):
 
 @router.message(F.chat.id == GROUP_ID and F.text.startswith("#new_user") and F.forward_from_chat.id == CHANNEL_ID)
 async def group_handler(message: Message):
-    user_id = int(message.text.split("|")[1].strip())
+    text = message.text if message.text else message.caption
+    user_id = int(text.split("|")[1].strip())
     user = await Users.getById(user_id)
     if not user:
         print(f"User with ID {user_id} not found in the database.")
@@ -57,29 +58,19 @@ async def group_handler(message: Message):
         original_user: Users.User = user
 
         original_user.group_message_id = message.message_id
-        await Users.update_user(original_user)
-
-
-@router.message(F.chat.type == "private")
-async def private_handler(message: Message):
-    user = await Users.getById(message.from_user.id)
-    if not user or not isinstance(user, Users.User):
-        return
-
-    await bot.send_message(chat_id=GROUP_ID, reply_to_message_id=user.group_message_id, reply_parameters=ReplyParameters(message_id=message.message_id), text="")
-    await message.answer("Message sent to the group chat.")
+        await Users.merge(original_user)
 
 
 @router.message(F.chat.type == ChatType.PRIVATE)
 async def echo(message: Message):
-    await bot.send_message(chat_id=GROUP_ID, text="", reply_parameters=ReplyParameters(message_id=message.message_id, chat_id=GROUP_ID))
+    await bot.send_message(chat_id=GROUP_ID, text=message.text)
     await message.answer("Message sent to the group chat.")
 
 
-
 async def main():
-    # await bot.delete_webhook()
+    await bot.delete_webhook()
     dp = Dispatcher()
+
     dp.include_router(router)
 
     await dp.start_polling(bot, drop_pending_updates=True)

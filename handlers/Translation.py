@@ -1,3 +1,6 @@
+from Config import FAST_DELIVERY
+
+
 translation = {
     "Главное меню": {
         "uz": "Asosiy menyu"
@@ -53,8 +56,8 @@ translation = {
     "Выберите категорию!": {
         "uz": "Kategoriya tanlang!"
     },
-    "Мы рады сотрудничеству с вами. \nПроцесс идентификации вашего видео осуществляется через наш бот. Как только фотографии будут обнаружены, они незамедлительно будут вам предоставлены. \n\nСтоимость услуги составляет <b>30 000 сумов</b>. В случае если ваши фотографии не будут найдены, произведенная оплата будет возвращена в полном объеме (100%).": {
-        "uz": "Biz bilan hamkorlik qilayotganingizdan mamnunmiz. \nBotimiz orqali videongizni identifikatsiya qilish jarayoni amalga oshirilmoqda. Shaxsingizga oid suratlar aniqlanishi bilan ular sizga zudlik bilan taqdim etiladi. \n\nXizmat narxi <b>30 000 soʻmni</b> tashkil etadi. Suratlaringiz topilmagan taqdirda, amalga oshirilgan toʻlov 100% miqdorida toʻliq qaytarib beriladi."
+    f"Мы рады сотрудничеству с вами. \nПроцесс идентификации вашего видео осуществляется через наш бот. Как только фотографии будут обнаружены, они незамедлительно будут вам предоставлены. \n\nСтоимость услуги составляет <b>{FAST_DELIVERY:,} сумов</b>. В случае если ваши фотографии не будут найдены, произведенная оплата будет возвращена в полном объеме (100%).": {
+        "uz": f"Biz bilan hamkorlik qilayotganingizdan mamnunmiz. \nBotimiz orqali videongizni identifikatsiya qilish jarayoni amalga oshirilmoqda. Shaxsingizga oid suratlar aniqlanishi bilan ular sizga zudlik bilan taqdim etiladi. \n\nXizmat narxi <b>{FAST_DELIVERY:,} soʻmni</b> tashkil etadi. Suratlaringiz topilmagan taqdirda, amalga oshirilgan toʻlov 100% miqdorida toʻliq qaytarib beriladi."
     },
     "Категория выбрана!": {
         "uz": "Kategoriya tanlandi!"

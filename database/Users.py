@@ -31,6 +31,12 @@ async def update_user(user: User):
         return updated_user
 
 
+async def merge(user: User):
+    async with async_session() as session:
+        merged_user = await session.merge(user)
+        await session.commit()
+        return merged_user
+
 class UsersService:
     async def getAll(self):
         async with async_session() as session:

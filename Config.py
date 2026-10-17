@@ -24,6 +24,12 @@ INSTAGRAM_URL = getenv('INSTAGRAM_URL', 'https://instagram.com')
 CARD_NUMBER = getenv('CARD_NUMBER', '')
 DEFAULT_LANGUAGE = getenv('DEFAULT_LANGUAGE', 'uz')
 
-FAST_DELIVERY = int(getenv('FAST_DELIVERY', 30000))
-SLOW_DELIVERY = int(getenv('SLOW_DELIVERY', 30000))
+FAST_DELIVERY = int(getenv('FAST_DELIVERY', 50000))
+SLOW_DELIVERY = int(getenv('SLOW_DELIVERY', 50000))
+
+# Dashboard API
+DASHBOARD_USERNAME = getenv('DASHBOARD_USERNAME', 'admin')
+DASHBOARD_PASSWORD = getenv('DASHBOARD_PASSWORD', 'admin')
+DASHBOARD_SECRET_KEY = getenv('DASHBOARD_SECRET_KEY', 'change-me-in-production')
+API_PORT = int(getenv('API_PORT', '8000'))
 

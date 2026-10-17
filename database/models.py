@@ -45,7 +45,7 @@ class Order(Base):
     cancel_reason: Mapped[str | None] = mapped_column(String(255), default=None)
     canceled_at: Mapped[datetime | None] = mapped_column(DateTime, default=None)
     created_at: Mapped[datetime | None] = mapped_column(DateTime, server_default=func.current_date())
-
+    amount: Mapped[int] = mapped_column(Integer , default=30000)
     user: Mapped[User | None] = relationship(back_populates="orders")
     category: Mapped[Category | None] = relationship(back_populates="orders")
     photos: Mapped[list["OrderPhoto"]] = relationship(back_populates="order")

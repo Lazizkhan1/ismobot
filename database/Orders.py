@@ -1,5 +1,6 @@
 from sqlalchemy import func, select, update
 
+from Config import FAST_DELIVERY
 from database.models import Order
 from database.session import async_session
 from database.utils import to_dict, to_dicts
@@ -47,6 +48,7 @@ class OrdersService:
                 ceremony_date=clean_ceremony_date,
                 video_note_id=video_note_id,
                 cheque_id=cheque_id,
+                amount=FAST_DELIVERY
             )
             session.add(order)
             await session.commit()
