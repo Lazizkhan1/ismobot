@@ -22,6 +22,7 @@ async def update_user(user: User):
                 full_name=user.full_name,
                 lang=user.lang,
                 user_type=user.user_type,
+                referred_by=user.referred_by,
             ).
             returning(User)
         )
@@ -52,11 +53,11 @@ class UsersService:
             row = result.fetchone()
             return {"lang": row[0]} if row else None
 
-    async def create(self, id: int, username: str | None, fullname: str, lang: str, typeId: int):
+    async def create(self, id: int, username: str | None, fullname: str, lang: str, typeId: int, referred_by: int | None = None):
         async with async_session() as session:
             smt = (
                 insert(User)
-                .values(id=id, username=username, full_name=fullname, lang=lang, user_type=typeId)
+                .values(id=id, username=username, full_name=fullname, lang=lang, user_type=typeId, referred_by=referred_by)
                 .returning(User)
             )
             result = await session.execute(smt)
@@ -87,4 +88,11 @@ class UsersService:
     async def setLanguage(self, user_id, lang):
         async with async_session() as session:
             await session.execute(update(User).where(User.id == user_id).values(lang=lang))
+            await session.commit()
+
+    async def set_referred_by(self, user_id: int, referred_by: int):
+        async with async_session() as session:
+            await session.execute(
+                update(User).where(User.id == user_id).values(referred_by=referred_by)
+            )
             await session.commit()

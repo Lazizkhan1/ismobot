@@ -32,4 +32,3 @@ DASHBOARD_USERNAME = getenv('DASHBOARD_USERNAME', 'admin')
 DASHBOARD_PASSWORD = getenv('DASHBOARD_PASSWORD', 'admin')
 DASHBOARD_SECRET_KEY = getenv('DASHBOARD_SECRET_KEY', 'change-me-in-production')
 API_PORT = int(getenv('API_PORT', '8000'))
-

@@ -190,6 +190,12 @@ translation = {
     },
     "Username: ": {
         "uz": "Username: "
+    },
+    "🤝 Пригласить друга": {
+        "uz": "🤝 Do'stni taklif qilish"
+    },
+    "🌟 <b>Пригласите друзей в Ismo Group!</b>\n\nОтправьте эту ссылку друзьям и знакомым, чтобы они тоже могли легко найти и скачать свои фотографии с мероприятий:\n👉 {referral_link}": {
+        "uz": "🌟 <b>Do'stlaringizni Ismo Group'ga taklif qiling!</b>\n\nUshbu havolani do'stlaringiz va yaqinlaringizga yuboring, ular ham tadbirlardagi o'z suratlarini oson topib yuklab olishlari mumkin:\n👉 {referral_link}"
     }
 }
 

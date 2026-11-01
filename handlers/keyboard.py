@@ -8,12 +8,18 @@ categories_service = CategoriesService()
 _lang = DEFAULT_LANGUAGE
 
 
-async def all_categories(prefix=""):
+def referral_button(lang_=_lang) -> InlineKeyboardButton:
+    return InlineKeyboardButton(text=_('🤝 Пригласить друга', lang_), callback_data='referral')
+
+
+async def all_categories(prefix="", lang_=_lang):
     categories = await categories_service.getAll()
     rows = []
     for category in categories:
         row = [InlineKeyboardButton(text=f"🏛️ {category['name']}", callback_data=f"{prefix}category:{category['id']}")]
         rows.append(row)
+    # if prefix == "order_":
+    #     rows.append([referral_button(lang_)])
     return InlineKeyboardMarkup(inline_keyboard=rows)
 
 

@@ -18,6 +18,7 @@ class User(Base):
     full_name: Mapped[str | None] = mapped_column(String(255), default=None)
     channel_message_id: Mapped[int | None] = mapped_column(BigInteger, default=None)
     group_message_id: Mapped[int | None] = mapped_column(BigInteger, default=None)
+    referred_by: Mapped[int | None] = mapped_column(BigInteger, ForeignKey("users.id", ondelete="SET NULL"), nullable=True, default=None)
     orders: Mapped[list["Order"]] = relationship(back_populates="user")
 
 

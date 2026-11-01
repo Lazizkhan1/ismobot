@@ -14,6 +14,7 @@ from database.Categories import CategoriesService
 from handlers.States import OrderState
 from handlers.Translation import _
 from handlers.keyboard import delivery_type, order_accept
+from handlers.referral import send_referral_message
 
 router = Router()
 
@@ -135,11 +136,6 @@ async def order_cheque_id(message: Message, state: FSMContext, lang: str) -> Non
 
     category = await category_service.getById(data["category_id"])
     cat_name = category["name"] if category else str(data["category_id"])
-    del_speed = (
-        _("Быстрая (2 часа)", lang)
-        if data.get("delivery_type") == "fast"
-        else _("Обычная (24 часа)", lang)
-    )
 
     admins = await users_service.getAllByUserType(user_type_service.getAdminType())
     admin_ids = {ADMIN}
@@ -164,8 +160,9 @@ async def order_cheque_id(message: Message, state: FSMContext, lang: str) -> Non
 
     await state.clear()
     await message.answer(
-        _("Заказ успешно оформлен! Наши администраторы отправят вам ваши фотографии как можно скорее.", lang)
+        text=_("Заказ успешно оформлен! Наши администраторы отправят вам ваши фотографии как можно скорее.", lang),
     )
+    await send_referral_message(bot, message.chat.id, message.from_user.id, lang)
 
 
 @router.callback_query(F.data == "flow1_pay")
@@ -174,7 +171,7 @@ async def handle_flow1_pay(query: CallbackQuery, state: FSMContext, lang: str) -
     await query.answer()
     await query.message.answer(
         Bold(_("Чтобы начать заказ, вы можете начать с выбора категории ниже.", lang)).as_html(),
-        reply_markup=await all_categories("order_"),
+        reply_markup=await all_categories("order_", lang),
         parse_mode=ParseMode.HTML,
     )
 
@@ -185,7 +182,7 @@ async def handle_flow2_continue(query: CallbackQuery, state: FSMContext, lang: s
     await query.answer()
     await query.message.answer(
         Bold(_("Чтобы начать заказ, вы можете начать с выбора категории ниже.", lang)).as_html(),
-        reply_markup=await all_categories("order_"),
+        reply_markup=await all_categories("order_", lang),
         parse_mode=ParseMode.HTML,
     )
 

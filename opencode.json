@@ -1,0 +1,17 @@
+{
+    "$schema": "https://opencode.ai/config.json",
+    "mcp": {
+        "idea": {
+            "type": "local",
+            "command": [
+                "/snap/pycharm/119/bin/pycharm",
+                "stdioMcpServer"
+            ],
+            "environment": {
+                "IJ_MCP_SERVER_PROJECT_PATH": "/home/laziz/Projects/ismobot",
+                "IJ_MCP_SERVER_PORT": "64462"
+            },
+            "enabled": true
+        }
+    }
+}

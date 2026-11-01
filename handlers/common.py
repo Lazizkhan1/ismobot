@@ -3,7 +3,7 @@ import logging
 import Config
 from aiogram import F, Router
 from aiogram.enums import ParseMode, ChatType
-from aiogram.filters import Command, CommandStart
+from aiogram.filters import Command, CommandObject, CommandStart
 from aiogram.fsm.context import FSMContext
 from aiogram.types import CallbackQuery, Message
 from aiogram.utils.formatting import Bold, Text
@@ -16,6 +16,7 @@ from handlers import admin_menu
 from handlers.Translation import _
 from handlers.constants import bot_commands
 from handlers.keyboard import all_categories, language_markup
+from handlers.referral import send_referral_message
 
 router = Router()
 
@@ -40,7 +41,7 @@ async def welcome_customer(user_id: int, message: Message, lang: str):
     await message.answer(**content.as_kwargs())
     await message.answer(
         Bold(_("Чтобы начать заказ, вы можете начать с выбора категории ниже.", lang)).as_html(),
-        reply_markup=await all_categories("order_"),
+        reply_markup=await all_categories("order_", lang),
         parse_mode=ParseMode.HTML,
     )
 
@@ -62,10 +63,19 @@ async def command_start_handler(
         state: FSMContext,
         lang: str,
         user: User,
+        command: CommandObject | None = None,
 ) -> None:
     await state.clear()
 
     if message.chat.type == ChatType.PRIVATE and message.from_user:
+        if user and user.referred_by is None and command and command.args and command.args.strip().isdigit():
+            cand_id = int(command.args.strip())
+            if cand_id != message.from_user.id:
+                ref_user = await Users.getById(cand_id)
+                if ref_user:
+                    user.referred_by = ref_user.id
+                    await Users.update_user(user)
+
         print(message.from_user.id)
         if message.from_user.id == ADMIN:
             print("Admin started the bot")
@@ -84,6 +94,12 @@ async def select_language(message: Message):
         text="🇺🇿 Iltimos tilni tanlang! \n🇷🇺 Пожалуйста, выберите язык!",
         reply_markup=language_markup(),
     )
+
+
+@router.callback_query(F.data == "referral")
+async def referral_callback_handler(query: CallbackQuery, lang: str) -> None:
+    await query.answer()
+    await send_referral_message(bot, query.from_user.id, query.from_user.id, lang)
 
 
 @router.callback_query(F.data.startswith("lang_"))

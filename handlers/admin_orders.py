@@ -10,15 +10,18 @@ from aiogram.utils.media_group import MediaGroupBuilder
 from bot_instance import bot
 from database import Orders
 from database.OrderPhotos import OrderPhotosService
+from database.Users import UsersService
 from handlers.States import CancelOrder, OrderPhotos
 from handlers.Translation import _
 from handlers.constants import bot_commands
 from handlers.keyboard import rate_the_service
+from handlers.referral import send_referral_message
 
 router = Router()
 
 orders_service = Orders.OrdersService()
 order_photos_service = OrderPhotosService()
+users_service = UsersService()
 
 
 @router.callback_query(F.data.startswith("accept_order:"))
@@ -75,11 +78,9 @@ async def order_photos_upload(message: Message, state: FSMContext, lang: str) ->
             await bot.send_media_group(chat_id=order["user_id"], media=builder.build())
 
         await state.clear()
-        await bot.send_message(
-            chat_id=order["user_id"],
-            text=_("Мы искренне рады сотрудничеству с вами. Пожалуйста, оцените качество нашего сервиса.", lang),
-            reply_markup=rate_the_service(lang),
-        )
+        customer_lang_info = await users_service.getLanguageById(order["user_id"])
+        cust_lang = customer_lang_info["lang"] if (customer_lang_info and customer_lang_info.get("lang")) else "uz"
+        await send_referral_message(bot, order["user_id"], order["user_id"], cust_lang)
         await message.answer(_("Заказ успешно завершен и фотографии отправлены!", lang))
         await bot.set_my_commands(bot_commands)
 
